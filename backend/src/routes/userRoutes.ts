@@ -7,12 +7,16 @@ import {
 	userUpdateProfileController,
 } from "../controllers/userControllers";
 
-const router = new Hono();
+const userRouter = new Hono<{
+	Bindings: {
+		DATABASE_URL: string;
+	};
+}>();
 
-router.post("/signin", userSignInController);
-router.post("/signup", userSignupController);
-router.post("/logout", userLogoutController);
-router.get("/profile", userGetProfileController);
-router.put("/profile", userUpdateProfileController);
+userRouter.post("/signin", userSignInController);
+userRouter.post("/signup", userSignupController);
+userRouter.post("/logout", userLogoutController);
+userRouter.get("/profile", userGetProfileController);
+userRouter.put("/profile", userUpdateProfileController);
 
-export default router;
+export default userRouter;
