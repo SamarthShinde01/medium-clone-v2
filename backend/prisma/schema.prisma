@@ -27,6 +27,8 @@ model Post {
   shortContent  String
   content       String
   image         String?
+  clap          Int?       @default(0)
+  comments      Comment[]
   createdAt     DateTime  @default(now())
 }
 
@@ -34,6 +36,8 @@ model Comment {
   id            String    @id     @default(uuid())
   userId        String
   user          User      @relation(fields: [userId], references: [id])
+  postId        String
+  post          Post      @relation(fields: [postId], references: [id])
   comment       String
   createdAt     DateTime  @default(now())
 }

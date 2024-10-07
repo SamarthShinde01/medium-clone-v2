@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Post" ADD COLUMN     "clap" INTEGER NOT NULL DEFAULT 0;

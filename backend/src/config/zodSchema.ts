@@ -27,3 +27,18 @@ export const updateUserSchema = z.object({
 	image: z.string().min(1, { message: "Enter valid username" }).optional(),
 	password: z.string().min(1, { message: "Enter valid username" }).optional(),
 });
+
+export const blogPostSchema = z.object({
+	title: z.string().min(1, { message: "Enter valid title" }),
+	shortContent: z.string().min(1, { message: "Enter valid shortContent" }),
+	content: z.string().min(1, { message: "Enter valid content" }),
+});
+
+export const blogUpdateSchema = z.object({
+	title: z.string().min(1, { message: "Enter valid title" }).optional(),
+	shortContent: z
+		.string()
+		.min(1, { message: "Enter valid shortContent" })
+		.optional(),
+	content: z.string().min(1, { message: "Enter valid content" }).optional(),
+});

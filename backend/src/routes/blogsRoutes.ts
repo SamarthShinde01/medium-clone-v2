@@ -8,15 +8,18 @@ import {
 	blogsUpdateController,
 	blogsUploadController,
 } from "../controllers/BlogControllers";
+import authMiddleware from "../middleware/authMiddleware";
 
-const router = new Hono();
+const blogRouter = new Hono<{
+	Bindings: { DATABASE_URL: string; JWT_SECRET: string };
+}>();
 
-router.get("/", blogsController);
-router.post("/", blogsUploadController);
-router.get("/:id", blogsGetController);
-router.put("/:id", blogsUpdateController);
-router.delete("/:id", blogsDeleteController);
-router.post("/clap/:id", blogsClapController);
-router.post("/comment/:id", blogsCommentController);
+blogRouter.get("/", blogsController);
+blogRouter.post("/", authMiddleware, blogsUploadController);
+blogRouter.get("/:id", blogsGetController);
+blogRouter.put("/:id", authMiddleware, blogsUpdateController);
+blogRouter.delete("/:id", authMiddleware, blogsDeleteController);
+blogRouter.post("/clap/:id", authMiddleware, blogsClapController);
+blogRouter.post("/comment/:id", authMiddleware, blogsCommentController);
 
-export default router;
+export default blogRouter;

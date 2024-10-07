@@ -4,7 +4,7 @@ import {
 	updateUserSchema,
 	userSigninSchema,
 	userSignupSchema,
-} from "../../config/zodSchema";
+} from "../config/zodSchema";
 import bcrypt from "bcryptjs";
 import generateToken from "../../utils/generateToken";
 import { deleteCookie } from "hono/cookie";
