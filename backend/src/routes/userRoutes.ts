@@ -6,6 +6,7 @@ import {
 	userSignupController,
 	userUpdateProfileController,
 } from "../controllers/userControllers";
+import authMiddleware from "../middleware/authMiddleware";
 
 const userRouter = new Hono<{
 	Bindings: {
@@ -13,6 +14,8 @@ const userRouter = new Hono<{
 		JWT_SECRET: string;
 	};
 }>();
+
+userRouter.use("/profile", authMiddleware);
 
 userRouter.post("/signin", userSignInController);
 userRouter.post("/signup", userSignupController);
