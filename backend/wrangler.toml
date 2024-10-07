@@ -5,3 +5,7 @@ compatibility_flags = [ "nodejs_compat" ]
 
 [vars]
 DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZjdmMGZlNDItMDIxMy00YWY4LWE1MzMtZWI5NmExNjhhZDliIiwidGVuYW50X2lkIjoiOWNkNGZlNWFiNDVhYTU1ZjJiNTVmMjJmODQwZTIzYjg4YjUzNzhjMjcxODY4NzcwNGZiMmJlOWI4ZTU5NTU1MCIsImludGVybmFsX3NlY3JldCI6IjQ4ZmRmMjU3LTlmMGItNGNmYS04NzM0LThjNTNlMjNlNzBlZCJ9.fAoAyV_DX9od5V2ze4kk6C0W7SaiXVsNKf3lCvBxNDI"
+
+JWT_SECRET="samarth-secret-keys"
+
+NODE_ENV="development"

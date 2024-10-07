@@ -8,8 +8,10 @@
 		"@prisma/client": "^5.20.0",
 		"@prisma/extension-accelerate": "^1.2.1",
 		"@types/bcryptjs": "^2.4.6",
+		"@types/jsonwebtoken": "^9.0.7",
 		"bcryptjs": "^2.4.3",
 		"hono": "^4.6.3",
+		"jsonwebtoken": "^9.0.2",
 		"prisma": "^5.20.0",
 		"zod": "^3.23.8"
 	},

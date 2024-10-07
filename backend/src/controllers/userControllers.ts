@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { userSigninSchema, userSignupSchema } from "../../config/zodSchema";
 import bcrypt from "bcryptjs";
+import generateToken from "../../utils/generateToken";
 
 //POST /api/v1/users/signin public
 const userSignInController = async (c: any) => {
@@ -33,6 +34,7 @@ const userSignInController = async (c: any) => {
 		if (!comparePassword) {
 			return c.json({ message: "Invalid password entered" }, 400);
 		} else {
+			generateToken(c, userExist.id);
 			return c.json({
 				user: { name: userExist.name, username: userExist.username },
 			});
@@ -72,6 +74,7 @@ const userSignupController = async (c: any) => {
 			},
 		});
 
+		generateToken(c, user.id);
 		return c.json({ user }, 200);
 	} catch (err: any) {
 		return c.json({ message: err.message }, 400);
