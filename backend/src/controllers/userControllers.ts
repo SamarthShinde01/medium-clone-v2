@@ -44,7 +44,11 @@ const userSignInController = async (c: any) => {
 		} else {
 			generateToken(c, userExist.id);
 			return c.json({
-				user: { name: userExist.name, username: userExist.username },
+				user: {
+					id: userExist.id,
+					name: userExist.name,
+					username: userExist.username,
+				},
 			});
 		}
 	} catch (err: any) {
