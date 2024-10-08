@@ -1,6 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client/edge";
+import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { blogPostSchema, blogUpdateSchema } from "../config/zodSchema";
+import { encodeBase64 } from "hono/utils/encode";
+import cloudinary from "../utils/cloudinary";
 
 //GET /api/v1/blogs public
 const blogsController = async (c: any) => {
@@ -24,26 +26,59 @@ const blogsUploadController = async (c: any) => {
 			datasourceUrl: c.env.DATABASE_URL,
 		}).$extends(withAccelerate());
 
-		const body = await c.req.json();
+		// Parse request body
+		const body = await c.req.parseBody();
 		const { success } = blogPostSchema.safeParse(body);
 
 		if (!success) {
 			return c.json({ message: "Invalid data entered" }, 401);
 		}
 
+		const image = body["image"] as File;
+		let cloudinaryResponse;
+
+		if (image) {
+			const byteArrayBuffer = await image.arrayBuffer();
+			const base64 = encodeBase64(byteArrayBuffer);
+
+			// Using fetch to upload image to Cloudinary
+			const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${c.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+			const formData = new FormData();
+			formData.append("file", `data:image/png;base64,${base64}`);
+			formData.append("upload_preset", c.env.CLOUDINARY_UPLOAD_PRESET); // Upload preset should be configured in Cloudinary
+			formData.append("folder", "medium-clone"); // Specify the folder
+
+			// Make the fetch request
+			const response = await fetch(cloudinaryUrl, {
+				method: "POST",
+				body: formData,
+			});
+
+			// Check if the response is ok
+			if (!response.ok) {
+				const errorResponse = await response.json();
+				throw new Error(`Cloudinary upload failed: ${errorResponse.message}`);
+			}
+
+			cloudinaryResponse = await response.json(); // Parse the response
+			console.log("Cloudinary Response:", cloudinaryResponse); // Log the response for debugging
+		}
+
+		// Create the blog post with the uploaded image URL
 		const post = await prisma.post.create({
 			data: {
 				userId: c.req.user.id,
 				title: body.title,
 				shortContent: body.title,
 				content: body.content,
-				image: body.image,
+				image: cloudinaryResponse?.secure_url || "", // Use Cloudinary image URL
 			},
 		});
 
 		return c.json(post, 200);
 	} catch (err: any) {
-		console.log(err.message);
+		console.error("Error:", err.message); // Log the error message
 		return c.json({ message: err.message }, 400);
 	}
 };

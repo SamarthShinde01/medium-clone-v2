@@ -9,3 +9,7 @@ DATABASE_URL="prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsI
 JWT_SECRET="samarth-secret-keys"
 
 NODE_ENV="development"
+
+CLOUDINARY_CLOUD_NAME="dn64adr8h"
+CLOUDINARY_API_KEY="751452137535974"
+CLOUDINARY_API_SECRET="Vl4H2-xOozdRLKuduo451JqMM_Q"

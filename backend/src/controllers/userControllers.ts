@@ -6,7 +6,7 @@ import {
 	userSignupSchema,
 } from "../config/zodSchema";
 import bcrypt from "bcryptjs";
-import generateToken from "../../utils/generateToken";
+import generateToken from "../utils/generateToken";
 import { deleteCookie } from "hono/cookie";
 
 //POST /api/v1/users/signin public
@@ -56,7 +56,9 @@ const userSignupController = async (c: any) => {
 			datasourceUrl: c.env.DATABASE_URL,
 		}).$extends(withAccelerate());
 
-		const body = await c.req.json();
+		const body = await c.req.parseBody();
+		console.log(body);
+
 		const { success } = userSignupSchema.safeParse(body);
 		if (!success) {
 			return c.json({ message: "Please enter valid data" }, 400);

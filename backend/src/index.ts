@@ -3,6 +3,7 @@ import blogRouter from "./routes/blogsRoutes";
 import { cors } from "hono/cors";
 import userRouter from "./routes/userRoutes";
 const app = new Hono<{ Bindings: { DATABASE_URL: string } }>();
+import "dotenv/config";
 
 app.use("*", cors());
 
