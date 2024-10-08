@@ -20,7 +20,8 @@ const userSignInController = async (c: any) => {
 		const { success } = userSigninSchema.safeParse(body);
 
 		if (!success) {
-			return c.json({ message: "Please enter valid data" }, 400);
+			c.status(400);
+			return c.json({ message: "Please enter valid data" });
 		}
 
 		const userExist = await prisma.user.findFirst({
@@ -28,7 +29,8 @@ const userSignInController = async (c: any) => {
 		});
 
 		if (!userExist) {
-			return c.json({ message: "User does not exist" }, 400);
+			c.status(400);
+			return c.json({ message: "User does not exist" });
 		}
 
 		const comparePassword = await bcrypt.compare(
@@ -37,7 +39,8 @@ const userSignInController = async (c: any) => {
 		);
 
 		if (!comparePassword) {
-			return c.json({ message: "Invalid password entered" }, 400);
+			c.status(400);
+			return c.json({ message: "Invalid password entered" });
 		} else {
 			generateToken(c, userExist.id);
 			return c.json({
@@ -45,23 +48,25 @@ const userSignInController = async (c: any) => {
 			});
 		}
 	} catch (err: any) {
-		return c.json({ message: err.message }, 400);
+		c.status(400);
+		return c.json({ message: err.message });
 	}
 };
 
 //POST /api/v1/users/signup public
 const userSignupController = async (c: any) => {
+	const body = await c.req.json();
+
+	const { success } = userSignupSchema.safeParse(body);
+
 	try {
 		const prisma = new PrismaClient({
 			datasourceUrl: c.env.DATABASE_URL,
 		}).$extends(withAccelerate());
 
-		const body = await c.req.parseBody();
-		console.log(body);
-
-		const { success } = userSignupSchema.safeParse(body);
 		if (!success) {
-			return c.json({ message: "Please enter valid data" }, 400);
+			c.status(400);
+			return c.json({ message: "Please enter valid data" });
 		}
 
 		const userExist = await prisma.user.findFirst({
@@ -69,7 +74,8 @@ const userSignupController = async (c: any) => {
 		});
 
 		if (userExist) {
-			return c.json({ message: "User already exist" }, 400);
+			c.status(400);
+			return c.json({ message: "User already exist" });
 		}
 
 		const hashedPassword = await bcrypt.hash(body.password, 10);
@@ -82,9 +88,11 @@ const userSignupController = async (c: any) => {
 		});
 
 		generateToken(c, user.id);
-		return c.json({ user }, 200);
+		c.status(200);
+		return c.json({ user });
 	} catch (err: any) {
-		return c.json({ message: err.message }, 400);
+		c.status(400);
+		return c.json({ message: err.message });
 	}
 };
 
@@ -92,10 +100,12 @@ const userSignupController = async (c: any) => {
 const userLogoutController = (c: any) => {
 	try {
 		deleteCookie(c, "jwt");
-		return c.json({ message: "Logged out successfully" }, 200);
+		c.status(200);
+		return c.json({ message: "Logged out successfully" });
 	} catch (err: any) {
 		console.error(err);
-		return c.json({ message: err.message }, 400);
+		c.status(400);
+		return c.json({ message: err.message });
 	}
 };
 
@@ -108,10 +118,12 @@ const userGetProfileController = (c: any) => {
 			username: c.req.user.username,
 			image: c.req.user.image,
 		};
-		return c.json(user, 200);
+		c.status(200);
+		return c.json(user);
 	} catch (err: any) {
 		console.log(err.message);
-		return c.json({ message: err.message }, 400);
+		c.status(400);
+		return c.json({ message: err.message });
 	}
 };
 
@@ -149,11 +161,12 @@ const userUpdateProfileController = async (c: any) => {
 				image: updatedUser.image,
 			},
 		});
-
-		return c.json({ user }, 200);
+		c.status(200);
+		return c.json({ user });
 	} catch (err: any) {
 		console.log(err.message);
-		return c.json({ message: err.message }, 400);
+		c.status(400);
+		return c.json({ message: err.message });
 	}
 };
 

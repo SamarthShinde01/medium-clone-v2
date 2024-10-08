@@ -12,9 +12,10 @@ const blogsController = async (c: any) => {
 		}).$extends(withAccelerate());
 
 		const blogs = await prisma.post.findMany({});
-
-		return c.json(blogs, 200);
+		c.status(200);
+		return c.json(blogs);
 	} catch (err: any) {
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
@@ -31,6 +32,7 @@ const blogsUploadController = async (c: any) => {
 		const { success } = blogPostSchema.safeParse(body);
 
 		if (!success) {
+			c.status(401);
 			return c.json({ message: "Invalid data entered" }, 401);
 		}
 
@@ -75,10 +77,11 @@ const blogsUploadController = async (c: any) => {
 				image: cloudinaryResponse?.secure_url || "", // Use Cloudinary image URL
 			},
 		});
-
-		return c.json(post, 200);
+		c.status(200);
+		return c.json(post);
 	} catch (err: any) {
 		console.error("Error:", err.message); // Log the error message
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
@@ -95,12 +98,15 @@ const blogsGetController = async (c: any) => {
 		const blog = await prisma.post.findFirst({ where: { id } });
 
 		if (!blog) {
+			c.status(400);
 			return c.json({ message: "Blog not found" }, 400);
 		}
 
-		return c.json(blog, 200);
+		c.status(200);
+		return c.json(blog);
 	} catch (err: any) {
 		console.log(err.message);
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
@@ -124,6 +130,7 @@ const blogsUpdateController = async (c: any) => {
 		const blog = await prisma.post.findFirst({ where: { id } });
 
 		if (!blog) {
+			c.status(400);
 			return c.json({ message: "Post not found" }, 400);
 		}
 
@@ -143,10 +150,11 @@ const blogsUpdateController = async (c: any) => {
 				image: updatedPost.image,
 			},
 		});
-
-		return c.json(updatedBlog, 200);
+		c.status(200);
+		return c.json(updatedBlog);
 	} catch (err: any) {
 		console.log(err.message);
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
@@ -160,10 +168,11 @@ const blogsDeleteController = async (c: any) => {
 
 		const id = await c.req.param("id");
 		const deletedPost = await prisma.post.delete({ where: { id: id } });
-
-		return c.json({ message: "Post deleted successfully" }, 200);
+		c.status(200);
+		return c.json({ message: "Post deleted successfully" });
 	} catch (err: any) {
 		console.log(err.message);
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
@@ -193,6 +202,7 @@ const blogsClapController = async (c: any) => {
 		return c.json({ message: "Clap updated on post" });
 	} catch (err: any) {
 		console.log(err.message);
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
@@ -210,10 +220,11 @@ const blogsCommentController = async (c: any) => {
 		const comment = await prisma.comment.create({
 			data: { userId: c.req.user.id, postId: id, comment: body.comment },
 		});
-
-		return c.json(comment, 200);
+		c.status(200);
+		return c.json(comment);
 	} catch (err: any) {
 		console.log(err.message);
+		c.status(400);
 		return c.json({ message: err.message }, 400);
 	}
 };
