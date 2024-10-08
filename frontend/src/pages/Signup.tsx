@@ -1,6 +1,6 @@
-import { Auth } from "../components/Auth";
 import { Quote } from "../components/Quote";
 import { MediumName } from "../components/MediumName";
+import { SignUpForm } from "@/components/SignUpForm";
 
 export const Signup = () => {
 	return (
@@ -9,7 +9,7 @@ export const Signup = () => {
 				<div className="m-2 ml-4">
 					<MediumName />
 				</div>
-				<Auth />
+				<SignUpForm />
 			</div>
 			<div>
 				<Quote />

@@ -8,6 +8,7 @@ import {
 	Route,
 	RouterProvider,
 } from "react-router-dom";
+import { Provider } from "react-redux";
 import { Blogs } from "./pages/Blogs.tsx";
 import { Signup } from "./pages/Signup.tsx";
 import { Signin } from "./pages/Signin.tsx";
@@ -18,6 +19,7 @@ import { Saved } from "./pages/Saved.tsx";
 import { Profile } from "./pages/Profile.tsx";
 import { Comments } from "./pages/Comments.tsx";
 import { EditBlog } from "./pages/EditBlog.tsx";
+import store from "./store.ts";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -38,7 +40,9 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")!).render(
-	<StrictMode>
-		<RouterProvider router={router} />
-	</StrictMode>
+	<Provider store={store}>
+		<StrictMode>
+			<RouterProvider router={router} />
+		</StrictMode>
+	</Provider>
 );
