@@ -35,9 +35,21 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 		blogById: builder.query({
 			query: (id) => `${BLOGS_URL}/${id}`,
 		}),
+		uploaded: builder.query({
+			query: () => ({
+				url: `${BLOGS_URL}/uploaded`,
+				headers: {
+					Authorization: token,
+				},
+			}),
+		}),
 	}),
 });
 
 // Export the hook for the publish mutation
-export const { usePublishMutation, useBlogsMutation, useBlogByIdQuery } =
-	blogsApiSlices;
+export const {
+	usePublishMutation,
+	useBlogsMutation,
+	useBlogByIdQuery,
+	useUploadedQuery,
+} = blogsApiSlices;

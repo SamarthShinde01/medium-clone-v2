@@ -9,9 +9,18 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { UploadedBlogsSkeleton } from "@/components/UploadedBlogsSkeleton";
+import { useUploadedQuery } from "@/slices/blogApiSlices";
 
 export const Uploaded = () => {
-	return (
+	const { data: posts, error, isLoading } = useUploadedQuery();
+
+	return isLoading ? (
+		<>
+			<Appbar />
+			<UploadedBlogsSkeleton />
+		</>
+	) : (
 		<>
 			<Appbar />
 			<div className="ml-4">
@@ -36,7 +45,9 @@ export const Uploaded = () => {
 					</Breadcrumb>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-					<BlogSmallCard />
+					{posts.map((post) => (
+						<BlogSmallCard key={post.id} blog={post} />
+					))}
 				</div>
 			</div>
 		</>
