@@ -127,6 +127,7 @@ const userGetProfileController = (c: any) => {
 			name: c.req.user.name,
 			username: c.req.user.username,
 			image: c.req.user.image,
+			bio: c.req.user.bio,
 		};
 		c.status(200);
 		return c.json(user);
@@ -144,7 +145,8 @@ const userUpdateProfileController = async (c: any) => {
 			datasourceUrl: c.env.DATABASE_URL,
 		}).$extends(withAccelerate());
 
-		const body = await c.req.json();
+		// const body = await c.req.json();
+		const body = await c.req.parseBody();
 
 		const { success } = updateUserSchema.safeParse(body);
 		if (!success) {
@@ -156,6 +158,7 @@ const userUpdateProfileController = async (c: any) => {
 			username: body.username || c.req.user.username,
 			image: body.image || c.req.user.image,
 			password: c.req.user.password,
+			bio: body.bio || c.req.user.bio,
 		};
 
 		if (body.password) {
@@ -169,6 +172,7 @@ const userUpdateProfileController = async (c: any) => {
 				username: updatedUser.username,
 				password: updatedUser.password,
 				image: updatedUser.image,
+				bio: updatedUser.bio,
 			},
 		});
 		c.status(200);
@@ -185,6 +189,7 @@ interface UpdatedUser {
 	username: string;
 	image: string;
 	password: string;
+	bio: string;
 }
 
 export {
