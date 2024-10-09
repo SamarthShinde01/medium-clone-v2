@@ -41,6 +41,9 @@ const userApiSlices = apiSlice.injectEndpoints({
 				body: data,
 			}),
 		}),
+		userById: builder.query({
+			query: (id) => `${USER_URL}/profile/${id}`,
+		}),
 	}),
 });
 
@@ -50,4 +53,5 @@ export const {
 	useSignupMutation,
 	useProfileMutation, // Updated to reflect the change
 	useUpdateProfileMutation,
+	useUserByIdQuery,
 } = userApiSlices;

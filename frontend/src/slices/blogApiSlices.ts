@@ -36,4 +36,4 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 });
 
 // Export the hook for the publish mutation
-export const { usePublishMutation } = blogsApiSlices;
+export const { usePublishMutation, useBlogsMutation } = blogsApiSlices;

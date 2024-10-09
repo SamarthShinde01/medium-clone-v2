@@ -19,6 +19,7 @@ import { usePublishMutation } from "@/slices/blogApiSlices";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Spinner } from "@/components/Spinner";
 
 export const Publish = () => {
 	const navigate = useNavigate();
@@ -59,7 +60,7 @@ export const Publish = () => {
 
 	return (
 		<>
-			<Appbar />{" "}
+			<Appbar />
 			<form onSubmit={submitHandler} encType="multipart/form-data">
 				<div className="flex justify-center">
 					<div className="mt-16 w-8/12 text-center">
@@ -116,13 +117,18 @@ export const Publish = () => {
 							initialData: "<p>Write Content...</p>",
 						}}
 					/> */}
-						<Button
-							variant="outline"
-							type="submit"
-							className="w-full mt-6 p-5 text-green-900 bg-green-100 hover:bg-green-200 "
-						>
-							Publish
-						</Button>
+
+						{isLoading ? (
+							<Spinner />
+						) : (
+							<Button
+								variant="outline"
+								type="submit"
+								className="w-full mt-6 p-5 text-green-900 bg-green-100 hover:bg-green-200 "
+							>
+								Publish
+							</Button>
+						)}
 					</div>
 				</div>
 			</form>
