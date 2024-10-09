@@ -29,9 +29,12 @@ export const updateUserSchema = z.object({
 });
 
 export const blogPostSchema = z.object({
-	title: z.string().min(1, { message: "Enter valid title" }),
-	shortContent: z.string().min(1, { message: "Enter valid shortContent" }),
-	content: z.string().min(1, { message: "Enter valid content" }),
+	title: z.string().min(1, { message: "Enter valid title" }).optional(),
+	shortContent: z
+		.string()
+		.min(1, { message: "Enter valid shortContent" })
+		.optional(),
+	content: z.string().min(1, { message: "Enter valid content" }).optional(),
 });
 
 export const blogUpdateSchema = z.object({
