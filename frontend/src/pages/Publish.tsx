@@ -48,10 +48,8 @@ export const Publish = () => {
 			}
 
 			const res = await publish(formData).unwrap();
-
-			console.log(res);
-
 			toast.success("Post published successfully");
+			navigate(`/blog/${res.id}`);
 		} catch (err: any) {
 			console.error(err);
 			toast.error(err?.message || err.error);

@@ -54,6 +54,17 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Posts"],
 		}),
+		delete: builder.mutation({
+			query: (data) => ({
+				url: `${BLOGS_URL}/${data.id}`,
+				method: "DELETE",
+				body: data,
+				headers: {
+					Authorization: token,
+				},
+			}),
+			invalidatesTags: ["Posts"],
+		}),
 	}),
 });
 
@@ -64,4 +75,5 @@ export const {
 	useBlogByIdQuery,
 	useUploadedQuery,
 	useUpdateMutation,
+	useDeleteMutation,
 } = blogsApiSlices;

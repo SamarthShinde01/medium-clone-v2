@@ -2,7 +2,10 @@ import comming_soon from "@/assets/images/coming_soon.jpg";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDeleteMutation } from "@/slices/blogApiSlices";
+import { Spinner } from "./Spinner";
+import { toast } from "react-toastify";
 
 interface BlogType {
 	id: string;
@@ -16,6 +19,26 @@ interface BlogType {
 }
 
 export const BlogSmallCard = ({ blog }: { blog: BlogType }) => {
+	const navigate = useNavigate();
+	const [deleteBlog, { isLoading }] = useDeleteMutation();
+
+	const deleteHandler = async () => {
+		try {
+			const confirmDelete = confirm("Are you sure you want to delete ?");
+
+			if (!confirmDelete) {
+				return;
+			}
+
+			const res = await deleteBlog({ id: blog.id }).unwrap();
+			toast.success(res?.message);
+			navigate("/blogs/uploaded");
+		} catch (err: any) {
+			console.error(err?.message || err.error);
+			toast.error(err?.message || err.error);
+		}
+	};
+
 	return (
 		<Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
 			<div className="flex">
@@ -41,9 +64,20 @@ export const BlogSmallCard = ({ blog }: { blog: BlogType }) => {
 					</Button>
 				</Link>
 
-				<Button variant="outline" className="flex-1 mx-1">
-					Delete
-				</Button>
+				{isLoading ? (
+					<div className="flex-1 mx-1">
+						<Spinner />
+					</div>
+				) : (
+					<Button
+						onClick={deleteHandler}
+						variant="outline"
+						className="flex-1 mx-1"
+					>
+						Delete
+					</Button>
+				)}
+
 				<Button variant="outline" className="flex-1 mx-1">
 					Show to all
 				</Button>
