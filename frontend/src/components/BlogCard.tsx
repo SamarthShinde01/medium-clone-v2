@@ -28,7 +28,7 @@ export const BlogCard = ({ blog }: { blog: BlogType }) => {
 
 	return (
 		<div className="p-4 border-b-[0.01rem] pb-3 border-gray-300 cursor-pointer">
-			<Link to={"/blog/1"}>
+			<Link to={`/blog/${blog.id}`}>
 				<div className="flex gap-2 items-center">
 					<Avatar className="w-6 h-6 ">
 						<AvatarImage src={profile?.user?.image || profileImage} />

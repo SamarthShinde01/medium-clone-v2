@@ -1,6 +1,9 @@
+import { Appbar } from "./Appbar";
+
 export const BlogPageSkeleton = () => {
 	return (
 		<div>
+			<Appbar />
 			<div className="mt-20 flex justify-start ml-20">
 				<div
 					role="status"

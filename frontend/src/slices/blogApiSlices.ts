@@ -32,8 +32,12 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Posts"],
 		}),
+		blogById: builder.query({
+			query: (id) => `${BLOGS_URL}/${id}`,
+		}),
 	}),
 });
 
 // Export the hook for the publish mutation
-export const { usePublishMutation, useBlogsMutation } = blogsApiSlices;
+export const { usePublishMutation, useBlogsMutation, useBlogByIdQuery } =
+	blogsApiSlices;

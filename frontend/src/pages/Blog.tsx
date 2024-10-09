@@ -1,15 +1,23 @@
 import { BlogPageSkeleton } from "@/components/BlogPageSkeleton";
 import { Appbar } from "../components/Appbar";
 import { FullBlog } from "../components/FullBlog";
-export const Blog = () => {
-	const loading = false;
+import { useBlogByIdQuery } from "@/slices/blogApiSlices";
+import { useParams } from "react-router-dom";
 
-	return loading ? (
+interface BlogType {
+	id: string;
+}
+
+export const Blog = ({ param }: { param: BlogType }) => {
+	const { id } = useParams();
+	const { data: blog, error, isLoading } = useBlogByIdQuery(id);
+
+	return isLoading ? (
 		<BlogPageSkeleton />
 	) : (
 		<div>
 			<Appbar />
-			<FullBlog />
+			<FullBlog blog={blog} />
 		</div>
 	);
 };

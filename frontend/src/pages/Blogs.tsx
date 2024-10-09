@@ -20,16 +20,19 @@ export const Blogs = () => {
 
 	if (isLoading) {
 		return (
-			<div>
-				<div className="mt-20 flex justify-center">
-					<div className="max-w-2xl w-full">
-						<BlogSkeleton />
-						<BlogSkeleton />
-						<BlogSkeleton />
-						<BlogSkeleton />
+			<>
+				<Appbar />
+				<div>
+					<div className="mt-20 flex justify-center">
+						<div className="max-w-2xl w-full">
+							<BlogSkeleton />
+							<BlogSkeleton />
+							<BlogSkeleton />s
+							<BlogSkeleton />
+						</div>
 					</div>
 				</div>
-			</div>
+			</>
 		);
 	}
 
