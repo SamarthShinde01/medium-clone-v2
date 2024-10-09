@@ -15,13 +15,15 @@ app.get("/", (c) => {
 
 // 404 Not Found handler
 app.notFound((c) => {
-	return c.json({ message: "Not Found" }, 404);
+	c.status(404);
+	return c.json({ message: "Not Found" });
 });
 
 // Error handling middleware
 app.onError((error, c) => {
 	console.error(error); // Log the error for debugging
-	return c.json({ message: error }, 500);
+	c.status(500);
+	return c.json({ message: error });
 });
 
 export default app;

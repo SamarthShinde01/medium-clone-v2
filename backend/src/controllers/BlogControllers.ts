@@ -111,6 +111,28 @@ const blogsGetController = async (c: any) => {
 	}
 };
 
+//GET  /api/v1/blogs/uploaded
+const blogsUploaded = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const uploaded = await prisma.post.findMany({
+			where: { userId: c.req.user.id },
+		});
+
+		if (!uploaded) {
+			throw new Error("Blogs not uploaded yet");
+		}
+
+		c.status(200);
+		return c.json(uploaded);
+	} catch (err: any) {
+		console.error(err?.message);
+	}
+};
+
 //PUT /api/v1/blogs/:id private
 const blogsUpdateController = async (c: any) => {
 	try {
@@ -237,4 +259,5 @@ export {
 	blogsGetController,
 	blogsUpdateController,
 	blogsUploadController,
+	blogsUploaded,
 };

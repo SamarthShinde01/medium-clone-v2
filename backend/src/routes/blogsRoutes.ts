@@ -7,6 +7,7 @@ import {
 	blogsGetController,
 	blogsUpdateController,
 	blogsUploadController,
+	blogsUploaded,
 } from "../controllers/BlogControllers";
 import authMiddleware from "../middleware/authMiddleware";
 import cloudinary from "../utils/cloudinary";
@@ -28,7 +29,7 @@ blogRouter.use(async (c, next) => {
 
 blogRouter.get("/", blogsController);
 blogRouter.post("/", authMiddleware, blogsUploadController);
-
+blogRouter.get("/uploaded", authMiddleware, blogsUploaded);
 blogRouter.get("/:id", blogsGetController);
 blogRouter.put("/:id", authMiddleware, blogsUpdateController);
 blogRouter.delete("/:id", authMiddleware, blogsDeleteController);
