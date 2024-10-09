@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import {
+	getUserProfile,
 	userGetProfileController,
 	userLogoutController,
 	userSignInController,
@@ -15,12 +16,11 @@ const userRouter = new Hono<{
 	};
 }>();
 
-userRouter.use("/profile", authMiddleware);
-
 userRouter.post("/signin", userSignInController);
 userRouter.post("/signup", userSignupController);
 userRouter.post("/logout", userLogoutController);
-userRouter.get("/profile", userGetProfileController);
-userRouter.put("/profile", userUpdateProfileController);
+userRouter.get("/profile", authMiddleware, userGetProfileController);
+userRouter.put("/profile", authMiddleware, userUpdateProfileController);
+userRouter.get("/profile/:id", getUserProfile);
 
 export default userRouter;

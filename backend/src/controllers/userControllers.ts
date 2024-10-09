@@ -184,6 +184,39 @@ const userUpdateProfileController = async (c: any) => {
 	}
 };
 
+const getUserProfile = async (c: any) => {
+	try {
+		const id = await c.req.param("id");
+		console.log(id);
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const user: any = await prisma.user.findFirst({
+			where: { id: id },
+		});
+		if (!user) {
+			c.status(400);
+			return c.json({ message: "User not found" });
+		}
+
+		c.status(200);
+		return c.json({
+			user: {
+				id: user.id,
+				name: user.name,
+				username: user.username,
+				image: user.image,
+				bio: user.bio,
+			},
+		});
+	} catch (err: any) {
+		console.error(err);
+		c.status(400);
+		return c.json({ message: err.message });
+	}
+};
+
 interface UpdatedUser {
 	name: string;
 	username: string;
@@ -198,4 +231,5 @@ export {
 	userUpdateProfileController,
 	userLogoutController,
 	userSignupController,
+	getUserProfile,
 };
