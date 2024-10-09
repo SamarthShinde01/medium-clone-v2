@@ -7,7 +7,7 @@ const generateToken = (c: any, userId: string) => {
 	// Use `c.cookie()` instead of `c.res.cookie()`
 	setCookie(c, "jwt", token, {
 		httpOnly: true,
-		sameSite: "strict", // Set to strict for better security
+		sameSite: "strict",
 		maxAge: 1 * 24 * 60 * 60, // 1 day
 		secure: c.env.NODE_ENV === "production", // Only set secure flag in production
 	});

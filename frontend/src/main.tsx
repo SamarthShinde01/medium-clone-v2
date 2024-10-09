@@ -8,6 +8,7 @@ import {
 	Route,
 	RouterProvider,
 } from "react-router-dom";
+import "react-toastify/ReactToastify.css";
 import { Provider } from "react-redux";
 import { Blogs } from "./pages/Blogs.tsx";
 import { Signup } from "./pages/Signup.tsx";
@@ -40,9 +41,9 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")!).render(
-	<Provider store={store}>
-		<StrictMode>
+	<StrictMode>
+		<Provider store={store}>
 			<RouterProvider router={router} />
-		</StrictMode>
-	</Provider>
+		</Provider>
+	</StrictMode>
 );

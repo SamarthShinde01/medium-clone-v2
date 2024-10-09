@@ -1,6 +1,7 @@
+import { BACKEND_URL } from "@/config";
 import { apiSlice } from "./apiSlices";
 
-const USER_URL = `${import.meta.env.BACKEND_URL}/api/v1/users`; //getting access to .env variables
+const USER_URL = `${BACKEND_URL}/api/v1/users`;
 
 const userApiSlices = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
@@ -25,11 +26,12 @@ const userApiSlices = apiSlice.injectEndpoints({
 				body: data,
 			}),
 		}),
-		getProfile: builder.query({
+		profile: builder.mutation({
 			// Changed to query
-			query: () => ({
+			query: (data) => ({
 				url: `${USER_URL}/profile`,
 				method: "GET",
+				body: data,
 			}),
 		}),
 		updateProfile: builder.mutation({
@@ -46,6 +48,6 @@ export const {
 	useSigninMutation,
 	useLogoutMutation,
 	useSignupMutation,
-	useGetProfileQuery, // Updated to reflect the change
+	useProfileMutation, // Updated to reflect the change
 	useUpdateProfileMutation,
 } = userApiSlices;

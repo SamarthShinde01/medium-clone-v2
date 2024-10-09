@@ -6,7 +6,14 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 
 const authMiddleware = async (c: any, next: Next) => {
 	try {
-		let token = getCookie(c, "jwt");
+		let token;
+
+		if (c.req.header("authorization")) {
+			token = c.req.header("authorization");
+		} else {
+			token = getCookie(c, "jwt");
+		}
+
 		if (token) {
 			const prisma = new PrismaClient({
 				datasourceUrl: c.env.DATABASE_URL,

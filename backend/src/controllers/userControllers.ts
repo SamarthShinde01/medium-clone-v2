@@ -8,6 +8,7 @@ import {
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken";
 import { deleteCookie } from "hono/cookie";
+import jwt from "jsonwebtoken";
 
 //POST /api/v1/users/signin public
 const userSignInController = async (c: any) => {
@@ -43,12 +44,15 @@ const userSignInController = async (c: any) => {
 			return c.json({ message: "Invalid password entered" });
 		} else {
 			generateToken(c, userExist.id);
+			const token = jwt.sign({ userId: userExist.id }, c.env.JWT_SECRET);
+			c.status(200);
 			return c.json({
 				user: {
 					id: userExist.id,
 					name: userExist.name,
 					username: userExist.username,
 				},
+				token,
 			});
 		}
 	} catch (err: any) {
@@ -92,8 +96,10 @@ const userSignupController = async (c: any) => {
 		});
 
 		generateToken(c, user.id);
+
+		const token = jwt.sign({ userId: user.id }, c.env.JWT_SECRET);
 		c.status(200);
-		return c.json({ user });
+		return c.json({ user, token });
 	} catch (err: any) {
 		c.status(400);
 		return c.json({ message: err.message });

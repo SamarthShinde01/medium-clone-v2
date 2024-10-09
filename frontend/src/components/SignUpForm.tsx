@@ -1,31 +1,46 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./Button";
 import { FormHeading } from "./FormHeading";
 import { Label } from "./Label";
 import { Input } from "./Input";
 import { setCredentials } from "@/slices/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSignupMutation } from "@/slices/userApiSlices";
+import { Spinner } from "./Spinner";
+import { toast } from "react-toastify";
 
 export const SignUpForm = () => {
-	const [name, setName] = useState<string>("");
-	const [username, setUsername] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
+	const [name, setName] = useState("");
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState(""); // State to hold error messages
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { userInfo } = useSelector((state) => state.auth);
 	const [signupApi, { isLoading }] = useSignupMutation();
-
-	useEffect(() => {
-		if (userInfo) {
-			navigate("/");
-		}
-	}, [navigate, userInfo]);
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
+
+		// Reset error before new submission
+		setError("");
+
+		// Check for empty fields
+		if (!name || !username || !password) {
+			setError("All fields are required.");
+			return;
+		}
+
+		try {
+			const res = await signupApi({ name, username, password }).unwrap();
+			dispatch(setCredentials({ ...res }));
+			toast.success("Signed Up Successfully");
+			navigate("/");
+		} catch (error) {
+			// Display error message from the API response
+			setError(error.data?.message || "Signup failed. Please try again.");
+		}
 	};
 
 	return (
@@ -40,26 +55,26 @@ export const SignUpForm = () => {
 							linkText: "Sign In",
 						}}
 					/>
-					<form onSubmit={submitHandler} method="POST">
+					{error && <div className="text-red-500 mb-4">{error}</div>}{" "}
+					{/* Error message display */}
+					<form onSubmit={submitHandler}>
 						<div className="mt-2 pt-2 flex flex-col">
 							<div className="mt-4">
 								<Label labelText="Name" />
-								{/* <Input placeholder="Enter your name" /> */}
 								<Input
 									placeholder="Enter your name"
 									type="text"
+									value={name} // Bind input value
 									onChange={(e) => setName(e.target.value)}
 								/>
 							</div>
 
 							<div className="mt-4">
-								<label className="leading-7 font-medium text-sm text-gray-800">
-									Email
-								</label>
 								<Label labelText="Email" />
 								<Input
 									type="email"
 									placeholder="Enter your email"
+									value={username} // Bind input value
 									onChange={(e) => setUsername(e.target.value)}
 								/>
 							</div>
@@ -69,11 +84,15 @@ export const SignUpForm = () => {
 								<Input
 									placeholder="Enter your password"
 									type="password"
+									value={password} // Bind input value
 									onChange={(e) => setPassword(e.target.value)}
 								/>
 							</div>
-
-							<Button buttonText="Sign Up" type="submit" />
+							{isLoading ? (
+								<Spinner />
+							) : (
+								<Button buttonText="Sign Up" type="submit" />
+							)}
 						</div>
 					</form>
 				</div>

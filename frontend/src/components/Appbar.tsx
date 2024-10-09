@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { MediumName } from "./MediumName";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Upload, SaveIcon, LogOutIcon, LucideUserPen } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/slices/authSlice";
+import { toast } from "react-toastify";
 import {
 	Sheet,
 	SheetContent,
@@ -10,9 +13,14 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import { useLogoutMutation } from "@/slices/userApiSlices";
 
 export const Appbar = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const [logoutApi, { isLoading }] = useLogoutMutation();
+	const { userInfo } = useSelector((state) => state.auth);
 	return (
 		<div className="border-b-2 py-1 border-gray-200 px-10 flex justify-between ">
 			<div className="flex items-center gap-4">
@@ -49,7 +57,7 @@ export const Appbar = () => {
 					<SheetContent>
 						<SheetHeader>
 							<SheetTitle className="text-3xl font-sans font-bold mb-5">
-								Samarth Shinde
+								{userInfo?.user?.name || "Anonymous"}
 							</SheetTitle>
 							<div className="border-b border-gray-300 my-2"></div>
 							<Link to={"/settings"} className="flex items-center gap-4 pb-1">
@@ -79,15 +87,30 @@ export const Appbar = () => {
 							</Link>
 
 							<div className="border-b border-gray-300 my-2"></div>
-							<div
-								onClick={() => navigate("/signin")}
-								className="flex items-center gap-4 pb-1"
-							>
-								<LogOutIcon />
-								<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
-									Logout
-								</SheetTitle>
-							</div>
+
+							{isLoading ? (
+								<div className="flex items-center gap-4 pb-1">
+									<LogOutIcon />
+									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
+										Logging Out
+									</SheetTitle>
+								</div>
+							) : (
+								<div
+									onClick={async () => {
+										await logoutApi().unwrap();
+										dispatch(logout());
+										toast.success("Logged out successfully");
+										navigate("/signin");
+									}}
+									className="flex items-center gap-4 pb-1"
+								>
+									<LogOutIcon />
+									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
+										Logout
+									</SheetTitle>
+								</div>
+							)}
 						</SheetHeader>
 					</SheetContent>
 				</Sheet>

@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import { Label } from "../components/Label";
 import { Input } from "../components/Input";
+import { useFetchProfile } from "@/hooks";
 
 export const EditProfile = () => {
-	const navigate = useNavigate();
-	const [name, setName] = useState("");
-	const [username, setUsername] = useState("");
+	const { loading, profile } = useFetchProfile();
 
 	return (
 		<div className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -25,15 +24,11 @@ export const EditProfile = () => {
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						<div>
 							<Label labelText="Full Name" />
-							<Input value={name} type="text" placeholder="Enter Full Name" />
+							<Input type="text" placeholder="Enter Full Name" />
 						</div>
 						<div>
 							<Label labelText="User name" />
-							<Input
-								type="email"
-								value={username}
-								placeholder="Enter User name"
-							/>
+							<Input type="email" placeholder="Enter User name" />
 						</div>
 					</div>
 
