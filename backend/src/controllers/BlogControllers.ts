@@ -140,7 +140,7 @@ const blogsUpdateController = async (c: any) => {
 			datasourceUrl: c.env.DATABASE_URL,
 		}).$extends(withAccelerate());
 
-		const body = await c.req.json();
+		const body = await c.req.parseBody();
 
 		const { success } = blogUpdateSchema.safeParse(body);
 		if (!success) {

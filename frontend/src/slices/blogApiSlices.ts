@@ -43,6 +43,17 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 				},
 			}),
 		}),
+		update: builder.mutation({
+			query: ({ data, id }) => ({
+				url: `${BLOGS_URL}/${id}`,
+				method: "PUT",
+				body: data,
+				headers: {
+					Authorization: token,
+				},
+			}),
+			invalidatesTags: ["Posts"],
+		}),
 	}),
 });
 
@@ -52,4 +63,5 @@ export const {
 	useBlogsMutation,
 	useBlogByIdQuery,
 	useUploadedQuery,
+	useUpdateMutation,
 } = blogsApiSlices;

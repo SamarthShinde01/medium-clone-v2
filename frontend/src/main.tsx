@@ -19,7 +19,7 @@ import { Uploaded } from "./pages/Uploaded.tsx";
 import { Saved } from "./pages/Saved.tsx";
 import { Profile } from "./pages/Profile.tsx";
 import { Comments } from "./pages/Comments.tsx";
-import { EditBlog } from "./pages/EditBlog.tsx";
+import { EditBlog } from "./pages/EditBlogPage.tsx";
 import store from "./store.ts";
 
 const router = createBrowserRouter(
