@@ -33,9 +33,12 @@ export const BlogSmallCard = ({ blog }: { blog: BlogType }) => {
 			const res = await deleteBlog({ id: blog.id }).unwrap();
 			toast.success(res?.message);
 			navigate("/blogs/uploaded");
-		} catch (err: any) {
-			console.error(err?.message || err.error);
-			toast.error(err?.message || err.error);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				// Narrow the type to Error and access the message property
+				console.error(err.message);
+				toast.error(err.message);
+			}
 		}
 	};
 

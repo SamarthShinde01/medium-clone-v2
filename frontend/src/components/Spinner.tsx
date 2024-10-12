@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 const override = {
@@ -7,7 +6,7 @@ const override = {
 };
 
 export const Spinner = () => {
-	let [loading, setLoading] = useState(true);
+	const loading = true;
 	return (
 		<ClipLoader
 			color="blue"

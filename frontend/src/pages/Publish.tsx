@@ -1,20 +1,20 @@
 import { Appbar } from "../components/Appbar";
 import { Button } from "@/components/ui/button";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-	ClassicEditor,
-	Bold,
-	Essentials,
-	Italic,
-	Mention,
-	Paragraph,
-	Undo,
-} from "ckeditor5";
+// import {
+// 	ClassicEditor,
+// 	Bold,
+// 	Essentials,
+// 	Italic,
+// 	Mention,
+// 	Paragraph,
+// 	Undo,
+// } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
 import "ckeditor5-premium-features/ckeditor5-premium-features.css";
-import { SlashCommand } from "ckeditor5-premium-features";
+// import { SlashCommand } from "ckeditor5-premium-features";
 import { usePublishMutation } from "@/slices/blogApiSlices";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -30,7 +30,13 @@ export const Publish = () => {
 
 	const [publish, { isLoading }] = usePublishMutation();
 
-	const submitHandler = async (e) => {
+	const ImageSubmitHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files) {
+			setImage(e.target.files[0]);
+		}
+	};
+
+	const submitHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		try {
@@ -50,9 +56,13 @@ export const Publish = () => {
 			const res = await publish(formData).unwrap();
 			toast.success("Post published successfully");
 			navigate(`/blog/${res.id}`);
-		} catch (err: any) {
-			console.error(err);
-			toast.error(err?.message || err.error);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.error(err);
+				toast.error(err?.message);
+			} else {
+				console.error(err);
+			}
 		}
 	};
 
@@ -74,9 +84,10 @@ export const Publish = () => {
 						<Input
 							type="file"
 							name="image"
-							onChange={(e) => setImage(e.target.files[0])}
+							onChange={ImageSubmitHandler}
 							className=" border-slate-200 pt-3 pb-8 mb-5"
 						/>
+
 						<Textarea
 							placeholder="Write Short Content..."
 							name="shortContent"

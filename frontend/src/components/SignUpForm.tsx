@@ -20,7 +20,7 @@ export const SignUpForm = () => {
 	const dispatch = useDispatch();
 	const [signupApi, { isLoading }] = useSignupMutation();
 
-	const submitHandler = async (e) => {
+	const submitHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		// Reset error before new submission
@@ -37,9 +37,10 @@ export const SignUpForm = () => {
 			dispatch(setCredentials({ ...res }));
 			toast.success("Signed Up Successfully");
 			navigate("/");
-		} catch (error) {
-			// Display error message from the API response
-			setError(error.data?.message || "Signup failed. Please try again.");
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				setError(error.message || "Signup failed. Please try again.");
+			}
 		}
 	};
 
@@ -65,7 +66,7 @@ export const SignUpForm = () => {
 									placeholder="Enter your name"
 									type="text"
 									value={name} // Bind input value
-									onChange={(e) => setName(e.target.value)}
+									onChange={setName}
 								/>
 							</div>
 
@@ -75,7 +76,7 @@ export const SignUpForm = () => {
 									type="email"
 									placeholder="Enter your email"
 									value={username} // Bind input value
-									onChange={(e) => setUsername(e.target.value)}
+									onChange={setUsername}
 								/>
 							</div>
 
@@ -85,7 +86,7 @@ export const SignUpForm = () => {
 									placeholder="Enter your password"
 									type="password"
 									value={password} // Bind input value
-									onChange={(e) => setPassword(e.target.value)}
+									onChange={setPassword}
 								/>
 							</div>
 							{isLoading ? (

@@ -12,8 +12,19 @@ import {
 import { UploadedBlogsSkeleton } from "@/components/UploadedBlogsSkeleton";
 import { useUploadedQuery } from "@/slices/blogApiSlices";
 
+interface PostType {
+	id: string;
+	userId: string;
+	title: string;
+	shortContent: string;
+	content: string;
+	image: string;
+	clap: number;
+	createdAt: string;
+}
+
 export const Uploaded = () => {
-	const { data: posts, error, isLoading } = useUploadedQuery();
+	const { data: posts, isLoading } = useUploadedQuery({});
 
 	return isLoading ? (
 		<>
@@ -45,7 +56,7 @@ export const Uploaded = () => {
 					</Breadcrumb>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-					{posts.map((post) => (
+					{posts.map((post: PostType) => (
 						<BlogSmallCard key={post.id} blog={post} />
 					))}
 				</div>

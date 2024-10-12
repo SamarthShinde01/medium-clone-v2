@@ -3,11 +3,8 @@ import { Appbar } from "../components/Appbar";
 import { useBlogByIdQuery } from "@/slices/blogApiSlices";
 import { useParams } from "react-router-dom";
 
-interface ParamTypes {
-	id: string;
-}
-export const EditBlog = ({ param }: { param: ParamTypes }) => {
-	const { id } = useParams();
+export const EditBlog = () => {
+	const { id } = useParams<{ id: string }>();
 	const { data: blog } = useBlogByIdQuery(id);
 
 	return (

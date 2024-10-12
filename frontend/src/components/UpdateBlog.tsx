@@ -1,18 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-	ClassicEditor,
-	Bold,
-	Essentials,
-	Italic,
-	Mention,
-	Paragraph,
-	Undo,
-} from "ckeditor5";
+// import {
+// 	ClassicEditor,
+// 	Bold,
+// 	Essentials,
+// 	Italic,
+// 	Mention,
+// 	Paragraph,
+// 	Undo,
+// } from "ckeditor5";
 
-import { SlashCommand } from "ckeditor5-premium-features";
+// import { SlashCommand } from "ckeditor5-premium-features";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -35,7 +35,7 @@ export const UpdateBlogComponent = ({ blog }: { blog: BlogType }) => {
 	const [title, setTitle] = useState("");
 	const [shortContent, setShortContent] = useState("");
 	const [content, setContent] = useState("");
-	const [image, setImage] = useState(null);
+	// const [image, setImage] = useState(null);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
@@ -46,23 +46,39 @@ export const UpdateBlogComponent = ({ blog }: { blog: BlogType }) => {
 		setLoading(false);
 	}, [blog]);
 
-	const [update, { isLoading }] = useUpdateMutation();
+	const [update] = useUpdateMutation();
 
-	const submitHandler = async (e) => {
+	// const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 	if (e.target.files) {
+	// 		setImage(e.target.files[0]);
+	// 	}
+	// };
+
+	const submitHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
+
+		const formData = new FormData(); // Create FormData for file upload
+		formData.append("title", title);
+		formData.append("shortContent", shortContent);
+		formData.append("content", content);
+		// if (image) {
+		// 	formData.append("image", image); // Append image file if selected
+		// }
 
 		try {
 			const res = await update({
-				data: { title, shortContent, content },
+				data: formData,
 				id: blog.id,
 			}).unwrap();
 
 			console.log(res);
 			toast.success("Post updated successfully");
 			navigate(`/blog/${res.id}`);
-		} catch (err: any) {
-			console.error(err);
-			toast.error(err?.message || err.error);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.error(err);
+				toast.error(err?.message);
+			}
 		}
 	};
 	return loading ? (
@@ -79,10 +95,10 @@ export const UpdateBlogComponent = ({ blog }: { blog: BlogType }) => {
 						className=" border-slate-200 p-6 mb-5"
 					/>
 
-					<Input
+					<input
 						type="file"
-						onChange={(e) => setImage(e.target.files[0])}
-						className=" border-slate-200 pt-3 pb-8 mb-5"
+						// onChange={handleImageChange}
+						className="w-full bg-gray-300 rounded border bg-opacity-40 border-gray-700 focus:ring-2 focus:ring-gray-600 focus:bg-transparent focus:border-gray-500 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 					/>
 
 					<Textarea

@@ -4,13 +4,9 @@ import { FullBlog } from "../components/FullBlog";
 import { useBlogByIdQuery } from "@/slices/blogApiSlices";
 import { useParams } from "react-router-dom";
 
-interface BlogType {
-	id: string;
-}
-
-export const Blog = ({ param }: { param: BlogType }) => {
-	const { id } = useParams();
-	const { data: blog, error, isLoading } = useBlogByIdQuery(id);
+export const Blog = () => {
+	const { id } = useParams<{ id: string }>();
+	const { data: blog, isLoading } = useBlogByIdQuery(id);
 
 	return isLoading ? (
 		<BlogPageSkeleton />

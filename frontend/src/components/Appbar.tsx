@@ -2,7 +2,13 @@ import profile from "@/assets/images/profile.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { MediumName } from "./MediumName";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Upload, SaveIcon, LogOutIcon, LucideUserPen } from "lucide-react";
+import {
+	Upload,
+	SaveIcon,
+	LogOutIcon,
+	LucideUserPen,
+	LogInIcon,
+} from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/slices/authSlice";
 import { toast } from "react-toastify";
@@ -15,12 +21,48 @@ import {
 } from "@/components/ui/sheet";
 import { useLogoutMutation } from "@/slices/userApiSlices";
 
+interface AuthState {
+	userInfo: {
+		id: string;
+		name: string;
+		email: string;
+	} | null;
+	token: string | null;
+	isAuthenticated: boolean;
+}
+
+interface RootState {
+	auth: AuthState;
+}
+
+interface UserTypes {
+	id: string;
+	name: string;
+	username: string;
+}
+
+interface UserInfoType {
+	token: string;
+	user: UserTypes;
+}
+
 export const Appbar = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const [logoutApi, { isLoading }] = useLogoutMutation();
-	const { userInfo } = useSelector((state) => state.auth);
+
+	const userInfo = useSelector(
+		(state: RootState) => state.auth.userInfo
+	) as UserInfoType | null;
+
+	const logOutHandler = async () => {
+		await logoutApi({}).unwrap();
+		dispatch(logout());
+		toast.success("Logged out successfully");
+		navigate("/");
+	};
+
 	return (
 		<div className="border-b-2 py-1 border-gray-200 px-10 flex justify-between ">
 			<div className="flex items-center gap-4">
@@ -88,7 +130,7 @@ export const Appbar = () => {
 
 							<div className="border-b border-gray-300 my-2"></div>
 
-							{isLoading ? (
+							{userInfo && isLoading ? (
 								<div className="flex items-center gap-4 pb-1">
 									<LogOutIcon />
 									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
@@ -97,17 +139,24 @@ export const Appbar = () => {
 								</div>
 							) : (
 								<div
-									onClick={async () => {
-										await logoutApi().unwrap();
-										dispatch(logout());
-										toast.success("Logged out successfully");
-										navigate("/signin");
-									}}
+									onClick={logOutHandler}
 									className="flex items-center gap-4 pb-1"
 								>
 									<LogOutIcon />
 									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
 										Logout
+									</SheetTitle>
+								</div>
+							)}
+
+							{!userInfo && (
+								<div
+									onClick={() => navigate("/signin")}
+									className="flex items-center gap-4 pb-1"
+								>
+									<LogInIcon />
+									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
+										Sign In sam
 									</SheetTitle>
 								</div>
 							)}

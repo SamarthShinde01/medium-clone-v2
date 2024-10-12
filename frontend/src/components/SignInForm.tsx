@@ -18,7 +18,7 @@ export const SignInForm = () => {
 
 	const [signin, { isLoading }] = useSigninMutation();
 
-	const submitHandler = async (e) => {
+	const submitHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		try {
@@ -31,9 +31,11 @@ export const SignInForm = () => {
 			dispatch(setCredentials({ ...res }));
 			toast.success("Signed in successfully");
 			navigate("/");
-		} catch (err: any) {
-			console.error(err?.message || err.error);
-			toast.error(err?.message || err.error);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.error(err?.message);
+				toast.error(err?.message);
+			}
 		}
 	};
 
@@ -59,7 +61,7 @@ export const SignInForm = () => {
 								<Input
 									type="email"
 									placeholder="Enter your email"
-									onChange={(e) => setUsername(e.target.value)}
+									onChange={setUsername}
 								/>
 							</div>
 
@@ -68,7 +70,7 @@ export const SignInForm = () => {
 								<Input
 									placeholder="Enter your password"
 									type="password"
-									onChange={(e) => setPassword(e.target.value)}
+									onChange={setPassword}
 								/>
 							</div>
 

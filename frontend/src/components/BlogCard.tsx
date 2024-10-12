@@ -24,7 +24,7 @@ interface BlogType {
 }
 
 export const BlogCard = ({ blog }: { blog: BlogType }) => {
-	const { data: profile, error, isLoading } = useUserByIdQuery(blog?.userId);
+	const { data: profile } = useUserByIdQuery(blog?.userId);
 
 	return (
 		<div className="p-4 border-b-[0.01rem] pb-3 border-gray-300 cursor-pointer">

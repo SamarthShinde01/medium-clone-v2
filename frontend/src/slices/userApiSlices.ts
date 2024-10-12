@@ -3,6 +3,12 @@ import { apiSlice } from "./apiSlices";
 
 const USER_URL = `${BACKEND_URL}/api/v1/users`;
 
+const storedUserinfo = localStorage.getItem("userInfo") // Corrected key to "userInfo"
+	? JSON.parse(localStorage.getItem("userInfo") as string)
+	: null;
+
+const token = storedUserinfo ? storedUserinfo.token : null;
+
 const userApiSlices = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		signin: builder.mutation({
@@ -24,14 +30,18 @@ const userApiSlices = apiSlice.injectEndpoints({
 				url: `${USER_URL}/logout`,
 				method: "POST",
 				body: data,
+				headers: {
+					Authorization: token,
+				},
 			}),
 		}),
-		profile: builder.mutation({
+		profile: builder.query({
 			// Changed to query
-			query: (data) => ({
+			query: () => ({
 				url: `${USER_URL}/profile`,
-				method: "GET",
-				body: data,
+				headers: {
+					Authorization: token,
+				},
 			}),
 		}),
 		updateProfile: builder.mutation({
@@ -39,7 +49,11 @@ const userApiSlices = apiSlice.injectEndpoints({
 				url: `${USER_URL}/profile`,
 				method: "PUT",
 				body: data,
+				headers: {
+					Authorization: token,
+				},
 			}),
+			invalidatesTags: ["User"],
 		}),
 		userById: builder.query({
 			query: (id) => `${USER_URL}/profile/${id}`,
@@ -51,7 +65,7 @@ export const {
 	useSigninMutation,
 	useLogoutMutation,
 	useSignupMutation,
-	useProfileMutation, // Updated to reflect the change
+	useProfileQuery,
 	useUpdateProfileMutation,
 	useUserByIdQuery,
 } = userApiSlices;

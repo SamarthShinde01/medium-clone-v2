@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "./Button";
 import { Label } from "../components/Label";
 import { Input } from "../components/Input";
 
 export const ChangePassword = () => {
-	const navigate = useNavigate();
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+	const [password, setPassword] = useState<string>("");
+	const [confirmPassword, setConfirmPassword] = useState<string>("");
 	return (
 		<div className="bg-white shadow-lg rounded-lg overflow-hidden mt-3">
 			<form>
@@ -27,7 +25,8 @@ export const ChangePassword = () => {
 							<Input
 								type="password"
 								value={password}
-								placeholder="Enter Passwords"
+								onChange={setPassword} // Correctly passing the function
+								placeholder="Enter Password"
 							/>
 						</div>
 						<div>
@@ -35,6 +34,7 @@ export const ChangePassword = () => {
 							<Input
 								type="password"
 								value={confirmPassword}
+								onChange={setConfirmPassword}
 								placeholder="Enter Confirm Password"
 							/>
 						</div>

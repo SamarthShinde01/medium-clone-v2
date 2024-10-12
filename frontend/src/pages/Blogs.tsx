@@ -1,4 +1,4 @@
-import { useBlogsMutation } from "@/slices/blogApiSlices";
+import { useBlogsQuery } from "@/slices/blogApiSlices";
 import { Appbar } from "../components/Appbar";
 import { BlogCard } from "../components/BlogCard";
 import { BlogSkeleton } from "../components/BlogSkeleton";
@@ -6,17 +6,14 @@ import { useEffect, useState } from "react";
 
 export const Blogs = () => {
 	const [blogsData, setBlogsData] = useState([]);
-	const [blogsApi, { isLoading }] = useBlogsMutation();
+	// const [blogsApi, { isLoading }] = useBlogsMutation();
+	const { data: blogs, isLoading } = useBlogsQuery({});
 
 	useEffect(() => {
-		const fetchBlogs = async () => {
-			const res = await blogsApi().unwrap();
-			console.log(res);
-			setBlogsData(res);
-		};
-
-		fetchBlogs();
-	}, []);
+		if (blogs) {
+			setBlogsData(blogs);
+		}
+	}, [blogs]);
 
 	if (isLoading) {
 		return (

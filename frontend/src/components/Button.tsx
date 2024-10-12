@@ -1,6 +1,6 @@
 interface buttonType {
 	buttonText: string;
-	type?: string;
+	type?: "button" | "submit" | "reset";
 }
 
 export const Button = ({ buttonText, type = "button" }: buttonType) => {

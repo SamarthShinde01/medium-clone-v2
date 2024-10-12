@@ -2,34 +2,39 @@ import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import { Label } from "../components/Label";
 import { Input } from "../components/Input";
-import { useFetchProfile } from "@/hooks/userHooks";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { Spinner } from "./Spinner";
+import {
+	useProfileQuery,
+	useUpdateProfileMutation,
+} from "@/slices/userApiSlices";
 
 export const EditProfile = () => {
-	const { profile } = useFetchProfile();
-	const [name, setName] = useState("");
-	const [username, setUsername] = useState("");
-	const [image, setImage] = useState(null);
-	const [bio, setBio] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [reload, setReload] = useState(false);
+	const { data: profile } = useProfileQuery({});
+
+	const [name, setName] = useState<string>("");
+	const [username, setUsername] = useState<string>("");
+	const [image, setImage] = useState<File | null>(null);
+	const [bio, setBio] = useState<string>("");
 
 	useEffect(() => {
 		if (profile) {
 			setName(profile.name || "");
 			setUsername(profile.username || "");
-			setImage(profile.image || ""); // Save initial image URL if available
+			setImage(profile.image ? new File([], profile.image) : null); // Adjust if needed
 			setBio(profile.bio || "");
 		}
-	}, [reload]);
+	}, [profile]);
 
-	const handleImageChange = (e) => {
-		setImage(e.target.files[0]); // Save the selected file
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files) {
+			setImage(e.target.files[0]); // Save the selected file
+		}
 	};
 
-	const submitHandler = async (e) => {
+	const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+
+	const submitHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		const formData = new FormData(); // Create FormData for file upload
@@ -41,33 +46,17 @@ export const EditProfile = () => {
 		}
 
 		try {
-			const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-			setLoading(true);
-
-			const res = await axios.put(
-				"https://backend.samarthsshinde.workers.dev/api/v1/users/profile",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: userInfo.token,
-					},
-				}
-			);
-
-			// Immediately update the local state with the response data
+			const res = await updateProfile(formData).unwrap();
+			console.log(res);
 			setName(res.data.name);
 			setUsername(res.data.username);
 			setBio(res.data.bio);
-			setImage(res.data.image); // Optionally update if new image URL is returned
-
+			setImage(res.data.image);
 			toast.success("Profile Updated successfully");
-			setReload(true);
-		} catch (err: any) {
-			console.error(err?.message || err.error);
-			toast.error("Failed to update profile");
-		} finally {
-			setLoading(false);
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				toast.error(error.message);
+			}
 		}
 	};
 
@@ -91,7 +80,7 @@ export const EditProfile = () => {
 								type="text"
 								value={name}
 								placeholder="Enter Full Name"
-								onChange={(e) => setName(e.target.value)}
+								onChange={setName}
 							/>
 						</div>
 						<div>
@@ -100,7 +89,7 @@ export const EditProfile = () => {
 								type="email" // Change from email to text for usernames
 								value={username}
 								placeholder="Enter User Name"
-								onChange={(e) => setUsername(e.target.value)}
+								onChange={setUsername}
 							/>
 						</div>
 					</div>
@@ -108,7 +97,12 @@ export const EditProfile = () => {
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 						<div>
 							<Label labelText="Edit Picture" />
-							<Input type="file" onChange={handleImageChange} />
+							{/* <Input type="file" onChange={handleImageChange} /> */}
+							<input
+								type="file"
+								onChange={handleImageChange}
+								className="w-full bg-gray-300 rounded border bg-opacity-40 border-gray-700 focus:ring-2 focus:ring-gray-600 focus:bg-transparent focus:border-gray-500 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+							/>
 						</div>
 						<div>
 							<Label labelText="Bio" />
@@ -121,7 +115,7 @@ export const EditProfile = () => {
 						</div>
 					</div>
 					<div className="flex justify-end">
-						{loading ? (
+						{isLoading ? (
 							<Spinner />
 						) : (
 							<Button buttonText="Update Profile" type="submit" />

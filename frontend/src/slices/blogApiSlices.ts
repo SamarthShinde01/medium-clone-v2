@@ -21,16 +21,8 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Posts"],
 		}),
-		blogs: builder.mutation({
-			query: (data) => ({
-				url: BLOGS_URL,
-				method: "GET",
-				body: data,
-				headers: {
-					Authorization: token,
-				},
-			}),
-			invalidatesTags: ["Posts"],
+		blogs: builder.query({
+			query: () => `${BLOGS_URL}`,
 		}),
 		blogById: builder.query({
 			query: (id) => `${BLOGS_URL}/${id}`,
@@ -71,7 +63,7 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 // Export the hook for the publish mutation
 export const {
 	usePublishMutation,
-	useBlogsMutation,
+	useBlogsQuery,
 	useBlogByIdQuery,
 	useUploadedQuery,
 	useUpdateMutation,
