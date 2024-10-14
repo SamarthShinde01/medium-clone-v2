@@ -75,7 +75,11 @@ export const Appbar = () => {
 			<div className="flex items-center gap-3">
 				<button
 					onClick={() => {
-						navigate("/publish");
+						if (userInfo) {
+							navigate("/publish");
+						} else {
+							navigate("/signin");
+						}
 					}}
 					className="relative mr-2 px-5 h-7 w-28 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group"
 				>
@@ -90,12 +94,22 @@ export const Appbar = () => {
 				</button>
 
 				<Sheet>
-					<SheetTrigger>
-						<Avatar className="w-9 h-9 focus:outline-none">
-							<AvatarImage src={profile} />
-							<AvatarFallback>CN</AvatarFallback>
-						</Avatar>
-					</SheetTrigger>
+					{userInfo ? (
+						<SheetTrigger>
+							<Avatar className="w-9 h-9 focus:outline-none">
+								<AvatarImage src={profile} />
+								<AvatarFallback>CN</AvatarFallback>
+							</Avatar>
+						</SheetTrigger>
+					) : (
+						<Link to={"/signin"}>
+							<Avatar className="w-9 h-9 focus:outline-none">
+								<AvatarImage src={profile} />
+								<AvatarFallback>CN</AvatarFallback>
+							</Avatar>
+						</Link>
+					)}
+
 					<SheetContent>
 						<SheetHeader>
 							<SheetTitle className="text-3xl font-sans font-bold mb-5">
@@ -130,24 +144,25 @@ export const Appbar = () => {
 
 							<div className="border-b border-gray-300 my-2"></div>
 
-							{userInfo && isLoading ? (
-								<div className="flex items-center gap-4 pb-1">
-									<LogOutIcon />
-									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
-										Logging Out
-									</SheetTitle>
-								</div>
-							) : (
-								<div
-									onClick={logOutHandler}
-									className="flex items-center gap-4 pb-1"
-								>
-									<LogOutIcon />
-									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
-										Logout
-									</SheetTitle>
-								</div>
-							)}
+							{userInfo &&
+								(isLoading ? (
+									<div className="flex items-center gap-4 pb-1">
+										<LogOutIcon />
+										<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
+											Logging Out
+										</SheetTitle>
+									</div>
+								) : (
+									<div
+										onClick={logOutHandler}
+										className="flex items-center gap-4 pb-1"
+									>
+										<LogOutIcon />
+										<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
+											Logout
+										</SheetTitle>
+									</div>
+								))}
 
 							{!userInfo && (
 								<div

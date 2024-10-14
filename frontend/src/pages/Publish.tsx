@@ -1,20 +1,18 @@
 import { Appbar } from "../components/Appbar";
 import { Button } from "@/components/ui/button";
-// import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-// import {
-// 	ClassicEditor,
-// 	Bold,
-// 	Essentials,
-// 	Italic,
-// 	Mention,
-// 	Paragraph,
-// 	Undo,
-// } from "ckeditor5";
+import {
+	ClassicEditor,
+	Bold,
+	Essentials,
+	Italic,
+	Mention,
+	Paragraph,
+	Undo,
+} from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
-import "ckeditor5-premium-features/ckeditor5-premium-features.css";
-// import { SlashCommand } from "ckeditor5-premium-features";
 import { usePublishMutation } from "@/slices/blogApiSlices";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -96,36 +94,28 @@ export const Publish = () => {
 							required
 						/>
 
-						<Textarea
+						{/* <Textarea
 							placeholder="Write Content..."
 							name="content"
 							onChange={(e) => setContent(e.target.value)}
 							className=" border-slate-200 pt-3 pb-8 mb-5"
 							required
-						/>
+						/> */}
 
-						{/* <CKEditor
-						editor={ClassicEditor}
-						config={{
-							toolbar: {
-								items: ["undo", "redo", "|", "bold", "italic"],
-							},
-							plugins: [
-								Bold,
-								Essentials,
-								Italic,
-								Mention,
-								Paragraph,
-								SlashCommand,
-								Undo,
-							],
-							licenseKey: "<YOUR_LICENSE_KEY>",
-							mention: {
-								// Mention configuration
-							},
-							initialData: "<p>Write Content...</p>",
-						}}
-					/> */}
+						<CKEditor
+							onChange={(event, editor) => {
+								const data = editor.getData();
+								setContent(data);
+							}}
+							editor={ClassicEditor}
+							config={{
+								toolbar: {
+									items: ["undo", "redo", "|", "bold", "italic"],
+								},
+								plugins: [Bold, Essentials, Italic, Mention, Paragraph, Undo],
+								initialData: content,
+							}}
+						/>
 
 						{isLoading ? (
 							<Spinner />

@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { CommentsBookmarks } from "./CommentsBookmarks";
 import { useUserByIdQuery } from "@/slices/userApiSlices";
+import { useEffect } from "react";
 
 interface BlogType {
 	id: string;
@@ -17,7 +18,12 @@ interface BlogType {
 }
 
 export const FullBlog = ({ blog }: { blog: BlogType }) => {
-	const { data: profile } = useUserByIdQuery(blog?.userId);
+	const { data: profile, refetch: refetchProfile } = useUserByIdQuery(
+		blog?.userId
+	);
+	useEffect(() => {
+		refetchProfile();
+	}, [profile]);
 
 	return (
 		<div className="flex justify-center items-start pt-16 px-3">
@@ -68,7 +74,8 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 						</AspectRatio>
 					</div>
 
-					<p className="">{blog?.content}</p>
+					{/* <p className="">{he.decode(blog?.content)}</p> */}
+					<div dangerouslySetInnerHTML={{ __html: blog?.content }} />
 				</div>
 			</div>
 		</div>

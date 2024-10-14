@@ -7,6 +7,9 @@ function App() {
 		<>
 			<ToastContainer />
 			<Outlet />
+			<div className="mt-10 pt-10 flex justify-center">
+				<p className="text-slate-400">Code by Sa marth Shinde</p>
+			</div>
 		</>
 	);
 }

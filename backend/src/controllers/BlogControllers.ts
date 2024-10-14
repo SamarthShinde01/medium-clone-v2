@@ -29,6 +29,7 @@ const blogsUploadController = async (c: any) => {
 
 		// Parse request body
 		const body = await c.req.parseBody();
+		console.log(body);
 		const { success } = blogPostSchema.safeParse(body);
 
 		if (!success) {
@@ -37,36 +38,40 @@ const blogsUploadController = async (c: any) => {
 		}
 
 		const image = body["image"] as File;
-		let cloudinaryResponse;
+		console.log(image);
 
-		if (image) {
-			const byteArrayBuffer = await image.arrayBuffer();
-			const base64 = encodeBase64(byteArrayBuffer);
+		// // Convert the image to a base64-encoded string
+		// const byteArrayBuffer = await image.arrayBuffer();
+		// const base64 = Buffer.from(byteArrayBuffer).toString("base64");
+		// const dataUrl = `data:${image.type};base64,${base64}`;
+		// // Clean the image name to avoid slashes and use a suitable public_id
+		// const imageName = image.name.replace(/[\s/]+/g, "_"); // Replace slashes and spaces with underscores
 
-			// Using fetch to upload image to Cloudinary
-			const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${c.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
+		// // Use fetch to upload the image to Cloudinary
+		// const cloudinaryResponse = await fetch(
+		// 	"https://api.cloudinary.com/v1_1/dn64adr8h/image/upload",
+		// 	{
+		// 		method: "POST",
+		// 		headers: {
+		// 			"Content-Type": "application/json",
+		// 		},
+		// 		body: JSON.stringify({
+		// 			file: dataUrl, // Base64 encoded image
+		// 			upload_preset: "my_upload_preset", // Ensure you have a valid preset
+		// 			public_id: `medium-clone/${imageName}`, // Specify the asset folder as prefix if needed
+		// 		}),
+		// 	}
+		// );
 
-			const formData = new FormData();
-			formData.append("file", `data:image/png;base64,${base64}`);
-			formData.append("upload_preset", c.env.CLOUDINARY_UPLOAD_PRESET); // Upload preset should be configured in Cloudinary
-			formData.append("folder", "medium-clone"); // Specify the folder
+		// // Parse the Cloudinary response
+		// const uploadResult = await cloudinaryResponse.json();
+		// if (!cloudinaryResponse.ok) {
+		// 	throw new Error(
+		// 		uploadResult.error?.message || "Cloudinary upload failed"
+		// 	);
+		// }
 
-			// Make the fetch request
-			const response = await fetch(cloudinaryUrl, {
-				method: "POST",
-				body: formData,
-			});
-
-			// Check if the response is ok
-			if (!response.ok) {
-				const errorResponse = await response.json();
-				throw new Error(`Cloudinary upload failed: ${errorResponse.message}`);
-			}
-
-			cloudinaryResponse = await response.json(); // Parse the response
-			console.log("Cloudinary Response:", cloudinaryResponse); // Log the response for debugging
-		}
-
+		// console.log(uploadResult);
 		// Create the blog post with the uploaded image URL
 		const post = await prisma.post.create({
 			data: {
@@ -74,7 +79,7 @@ const blogsUploadController = async (c: any) => {
 				title: body.title,
 				shortContent: body.title,
 				content: body.content,
-				image: cloudinaryResponse?.secure_url || "", // Use Cloudinary image URL
+				image: "",
 			},
 		});
 		c.status(200);
@@ -160,7 +165,7 @@ const blogsUpdateController = async (c: any) => {
 			title: body.title || blog.title,
 			shortContent: body.shortContent || blog.shortContent,
 			content: body.content || blog.content,
-			image: body.image || blog.image,
+			image: "",
 		};
 
 		const updatedBlog = await prisma.post.update({

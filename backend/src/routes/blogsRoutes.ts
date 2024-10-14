@@ -10,7 +10,8 @@ import {
 	blogsUploaded,
 } from "../controllers/BlogControllers";
 import authMiddleware from "../middleware/authMiddleware";
-import cloudinary from "../utils/cloudinary";
+// import cloudinary from "../utils/cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
 const blogRouter = new Hono<{
 	Bindings: {
@@ -23,7 +24,12 @@ const blogRouter = new Hono<{
 }>();
 
 blogRouter.use(async (c, next) => {
-	cloudinary;
+	cloudinary.config({
+		cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "",
+		api_key: process.env.CLOUDINARY_API_KEY || "",
+		api_secret: process.env.CLOUDINARY_API_SECRET || "",
+	});
+
 	await next();
 });
 
