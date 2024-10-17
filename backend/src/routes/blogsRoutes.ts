@@ -1,5 +1,7 @@
 import { Hono } from "hono";
 import {
+	blogGetSavedPosts,
+	blogSavedController,
 	blogsClapController,
 	blogsCommentController,
 	blogsController,
@@ -8,6 +10,7 @@ import {
 	blogsUpdateController,
 	blogsUploadController,
 	blogsUploaded,
+	blogUnsavedController,
 } from "../controllers/BlogControllers";
 import authMiddleware from "../middleware/authMiddleware";
 // import cloudinary from "../utils/cloudinary";
@@ -33,6 +36,7 @@ blogRouter.use(async (c, next) => {
 	await next();
 });
 
+blogRouter.get("/saved/bulk", authMiddleware, blogGetSavedPosts);
 blogRouter.get("/", blogsController);
 blogRouter.post("/", authMiddleware, blogsUploadController);
 blogRouter.get("/uploaded", authMiddleware, blogsUploaded);
@@ -41,5 +45,7 @@ blogRouter.put("/:id", authMiddleware, blogsUpdateController);
 blogRouter.delete("/:id", authMiddleware, blogsDeleteController);
 blogRouter.post("/clap/:id", authMiddleware, blogsClapController);
 blogRouter.post("/comment/:id", authMiddleware, blogsCommentController);
+blogRouter.post("/saved", authMiddleware, blogSavedController);
+blogRouter.post("/unsaved", authMiddleware, blogUnsavedController);
 
 export default blogRouter;

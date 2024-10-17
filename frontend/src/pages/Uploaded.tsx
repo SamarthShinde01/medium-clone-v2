@@ -1,6 +1,5 @@
 import { Appbar } from "@/components/Appbar";
 import { BlogSmallCard } from "@/components/BlogSmallCard";
-
 import {
 	Breadcrumb,
 	BreadcrumbItem,

@@ -40,23 +40,20 @@ export const SignInForm = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-screen justify-center">
+		<div className="flex flex-col justify-center h-screen px-4 sm:px-6 lg:px-8">
 			<div className="flex justify-center">
-				<div className="w-1/2">
+				<div className="w-full max-w-md">
 					<FormHeading
 						heading="Sign In"
 						link={{
 							link: "/signup",
-							linkHeading: "Dont have an account ? ",
+							linkHeading: "Don't have an account?",
 							linkText: "Sign Up",
 						}}
 					/>
 					<form onSubmit={submitHandler}>
-						<div className="mt-2 pt-2 flex flex-col">
-							<div className="mt-4">
-								<label className="leading-7 font-medium text-sm text-gray-800">
-									Email
-								</label>
+						<div className="mt-4 flex flex-col space-y-4">
+							<div>
 								<Label labelText="Email" />
 								<Input
 									type="email"
@@ -65,20 +62,22 @@ export const SignInForm = () => {
 								/>
 							</div>
 
-							<div className="mt-4">
+							<div>
 								<Label labelText="Password" />
 								<Input
-									placeholder="Enter your password"
 									type="password"
+									placeholder="Enter your password"
 									onChange={setPassword}
 								/>
 							</div>
 
-							{isLoading ? (
-								<Spinner />
-							) : (
-								<Button buttonText="Sign In" type="submit" />
-							)}
+							<div>
+								{isLoading ? (
+									<Spinner />
+								) : (
+									<Button buttonText="Sign In" type="submit" />
+								)}
+							</div>
 						</div>
 					</form>
 				</div>

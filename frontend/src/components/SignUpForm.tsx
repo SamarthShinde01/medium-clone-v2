@@ -45,14 +45,14 @@ export const SignUpForm = () => {
 	};
 
 	return (
-		<div className="flex flex-col h-screen justify-center">
+		<div className="flex flex-col justify-center min-h-screen p-4 sm:p-8">
 			<div className="flex justify-center">
-				<div className="w-1/2">
+				<div className="w-full max-w-md">
 					<FormHeading
 						heading="Sign Up"
 						link={{
 							link: "/signin",
-							linkHeading: "Already have an account ? ",
+							linkHeading: "Already have an account?",
 							linkText: "Sign In",
 						}}
 					/>

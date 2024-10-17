@@ -171,7 +171,7 @@ export const Appbar = () => {
 								>
 									<LogInIcon />
 									<SheetTitle className="text-2xl font-sans font-light hover:cursor-pointer">
-										Sign In sam
+										Sign In
 									</SheetTitle>
 								</div>
 							)}

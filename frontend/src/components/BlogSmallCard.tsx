@@ -35,7 +35,6 @@ export const BlogSmallCard = ({ blog }: { blog: BlogType }) => {
 			navigate("/blogs/uploaded");
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				// Narrow the type to Error and access the message property
 				console.error(err.message);
 				toast.error(err.message);
 			}

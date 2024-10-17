@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Bookmark } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -19,23 +19,21 @@ import { Button } from "./ui/button";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 
-export const CommentsBookmarks = () => {
+export const CommentPost = () => {
 	return (
 		<div className="flex items-center gap-6 my-1">
-			<TooltipProvider>
-				<Tooltip>
-					<TooltipTrigger>
-						<Heart />
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>Claps</p>
-					</TooltipContent>
-				</Tooltip>
-			</TooltipProvider>
-
 			<Drawer>
 				<DrawerTrigger>
-					<MessageCircle />
+					<TooltipProvider>
+						<Tooltip>
+							<TooltipTrigger>
+								<MessageCircle />
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Comment</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				</DrawerTrigger>
 				<DrawerContent>
 					<div className="grid grid-cols-12">
@@ -100,49 +98,9 @@ export const CommentsBookmarks = () => {
 								</ScrollArea>
 							</div>
 						</div>
-
-						{/* <div className="flex justify-center items-center w-1/2 h-full">
-							<ScrollArea className="h-[450px] w-5/6 flex flex-col  rounded-md border-b border-slate-200 p-4">
-								<DrawerHeader>
-									<DrawerTitle>Write a comment !</DrawerTitle>
-									<DrawerDescription>
-										This action cannot be undone.
-									</DrawerDescription>
-								</DrawerHeader>
-								<DrawerFooter className="flex justify-center  mt-5">
-									<form className="gap-4">
-										<Textarea
-											placeholder="Enter a comment.."
-											className="my-4"
-										/>
-										<Button className="w-60 mr-4">Submit</Button>
-										<DrawerClose>
-											<Button
-												type="submit"
-												variant="outline"
-												className="w-60 bg-slate-100 hover:bg-slate-300 "
-											>
-												Cancel
-											</Button>
-										</DrawerClose>
-									</form>
-								</DrawerFooter>
-							</ScrollArea>
-						</div> */}
 					</div>
 				</DrawerContent>
 			</Drawer>
-
-			<TooltipProvider>
-				<Tooltip>
-					<TooltipTrigger>
-						<Bookmark />
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>Bookmark</p>
-					</TooltipContent>
-				</Tooltip>
-			</TooltipProvider>
 		</div>
 	);
 };

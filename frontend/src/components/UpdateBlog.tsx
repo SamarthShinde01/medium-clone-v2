@@ -113,6 +113,7 @@ export const UpdateBlogComponent = ({ blog }: { blog: BlogType }) => {
 
 					<CKEditor
 						onChange={(event, editor) => {
+							console.log(event);
 							const data = editor.getData();
 							setContent(data);
 						}}

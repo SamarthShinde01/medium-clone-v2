@@ -196,7 +196,10 @@ const blogsDeleteController = async (c: any) => {
 		const id = await c.req.param("id");
 		const deletedPost = await prisma.post.delete({ where: { id: id } });
 		c.status(200);
-		return c.json({ message: "Post deleted successfully" });
+		return c.json({
+			message: "Post deleted successfully",
+			deleted: deletedPost,
+		});
 	} catch (err: any) {
 		console.log(err.message);
 		c.status(400);
@@ -256,6 +259,89 @@ const blogsCommentController = async (c: any) => {
 	}
 };
 
+//POST /api/v1/blogs/saved  private
+const blogSavedController = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const body = await c.req.json();
+		console.log(body);
+		const saved = await prisma.bookmark.create({
+			data: { userId: c.req.user.id, postId: body.blogId },
+		});
+		console.log(saved);
+		c.status(200);
+		return c.json(saved);
+	} catch (err: any) {
+		console.log(err.message);
+		c.status(400);
+		return c.json({ message: err.message });
+	}
+};
+
+const blogUnsavedController = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const body = await c.req.json();
+
+		const bookmark = await prisma.bookmark.findFirst({
+			where: { postId: body.blogId, userId: c.req.user.id },
+		});
+		console.log(bookmark);
+		const postId = await prisma.bookmark.deleteMany({
+			where: { id: bookmark?.id, userId: c.req.user.id },
+		});
+
+		c.status(200);
+		return c.json(postId);
+	} catch (err: any) {
+		console.error(err);
+		c.status(400);
+		return c.json({ message: err.message });
+	}
+};
+
+const blogGetSavedPosts = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const blogData = await prisma.user.findUnique({
+			where: { id: c.req.user.id },
+			select: {
+				id: true,
+				username: true,
+				bookmarks: {
+					where: {
+						userId: c.req.user.id,
+					},
+					select: {
+						id: true,
+						postId: true,
+					},
+				},
+			},
+		});
+
+		const postIds = blogData?.bookmarks.map((bookmark) => bookmark.postId);
+		const posts = await prisma.post.findMany({
+			where: { id: { in: postIds } },
+		});
+		c.status(200);
+		return c.json({ blogData, posts });
+	} catch (err: any) {
+		console.error(err);
+		c.status(400);
+		return c.json({ message: err.message });
+	}
+};
+
 export {
 	blogsClapController,
 	blogsCommentController,
@@ -265,4 +351,7 @@ export {
 	blogsUpdateController,
 	blogsUploadController,
 	blogsUploaded,
+	blogSavedController,
+	blogUnsavedController,
+	blogGetSavedPosts,
 };

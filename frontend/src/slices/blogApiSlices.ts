@@ -57,6 +57,36 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ["Posts"],
 		}),
+		saved: builder.mutation({
+			query: (data) => ({
+				url: `${BLOGS_URL}/saved`,
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: {
+					Authorization: token,
+				},
+			}),
+			invalidatesTags: ["Posts"],
+		}),
+		unsaved: builder.mutation({
+			query: (data) => ({
+				url: `${BLOGS_URL}/unsaved`,
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: {
+					Authorization: token,
+				},
+			}),
+			invalidatesTags: ["Posts"],
+		}),
+		savedBulk: builder.query({
+			query: () => ({
+				url: `${BLOGS_URL}/saved/bulk`,
+				headers: {
+					Authorization: token,
+				},
+			}),
+		}),
 	}),
 });
 
@@ -68,4 +98,7 @@ export const {
 	useUploadedQuery,
 	useUpdateMutation,
 	useDeleteMutation,
+	useSavedMutation,
+	useUnsavedMutation,
+	useSavedBulkQuery,
 } = blogsApiSlices;

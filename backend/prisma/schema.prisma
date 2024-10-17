@@ -16,6 +16,7 @@ model User {
   image     String?
   bio       String?
   posts     Post[]
+  bookmarks     Bookmark[]
   comments  Comment[]
   createdAt DateTime  @default(now())
 }
@@ -30,6 +31,16 @@ model Post {
   image         String?
   clap          Int?       @default(0)
   comments      Comment[]
+  bookmarks     Bookmark[]
+  createdAt     DateTime  @default(now())
+}
+
+model Bookmark {
+  id            String    @id  @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  postId        String
+  post          Post      @relation(fields: [postId], references: [id])  
   createdAt     DateTime  @default(now())
 }
 

@@ -1,5 +1,4 @@
 import { Appbar } from "@/components/Appbar";
-import { BlogSaveCard } from "@/components/BlogSaveCard";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -8,6 +7,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { SavedPost } from "@/components/SavedPost";
 
 export const Saved = () => {
 	return (
@@ -34,7 +34,7 @@ export const Saved = () => {
 				</div>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-					<BlogSaveCard />
+					<SavedPost />
 				</div>
 			</div>
 		</>

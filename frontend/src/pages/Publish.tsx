@@ -104,6 +104,7 @@ export const Publish = () => {
 
 						<CKEditor
 							onChange={(event, editor) => {
+								console.log(event);
 								const data = editor.getData();
 								setContent(data);
 							}}
