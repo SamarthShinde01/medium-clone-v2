@@ -8,7 +8,13 @@ import { CommentPost } from "./CommentPost";
 import { TooltipForIcons } from "./TooltipForIcons";
 import { Bookmark, HeartIcon } from "lucide-react";
 import { useSaveBlog } from "@/hooks";
-import { useSavedBulkQuery, useUnsavedMutation } from "@/slices/blogApiSlices";
+import {
+	useGetLikedQuery,
+	useLikeMutation,
+	useSavedBulkQuery,
+	useUnlikeMutation,
+	useUnsavedMutation,
+} from "@/slices/blogApiSlices";
 import { toast } from "react-toastify";
 
 interface BlogType {
@@ -24,13 +30,19 @@ interface BlogType {
 
 export const FullBlog = ({ blog }: { blog: BlogType }) => {
 	const { handleSaveBlog } = useSaveBlog();
+	const [unsave] = useUnsavedMutation();
+	const [likeBlog] = useLikeMutation();
+	const [unlikeBlog] = useUnlikeMutation();
+	const { data: getLiked, refetch: refetchLikes } = useGetLikedQuery({});
 	const { data: savedBulk, refetch } = useSavedBulkQuery({});
 	const [saved, setSaved] = useState<boolean>(false);
-	const [unsave] = useUnsavedMutation();
+	const [liked, setLiked] = useState<boolean>(false);
+
 	const { data: profile, refetch: refetchProfile } = useUserByIdQuery(
 		blog?.userId
 	);
 
+	//save blog start
 	useEffect(() => {
 		refetchProfile();
 	}, [blog?.userId, refetchProfile]);
@@ -61,6 +73,50 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 			}
 		}
 	};
+	//save blog end
+
+	//like blog start
+	const likePostHandler = async (blogId: string) => {
+		try {
+			const liked = await likeBlog({
+				blogId,
+			}).unwrap();
+			console.log(liked);
+			refetchLikes();
+			toast.success("Post Liked");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.error(err.message);
+			}
+		}
+	};
+
+	const unlikePostHandler = async (blogId: string) => {
+		try {
+			const unlike = await unlikeBlog({
+				blogId,
+			}).unwrap();
+			console.log(unlike);
+			refetchLikes();
+			toast.success("Post Unliked");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.error(err.message);
+			}
+		}
+	};
+
+	useEffect(() => {
+		if (getLiked) {
+			console.log(getLiked);
+			const isLiked = getLiked.some(
+				(like: { postId: string }) => like.postId === blog.id
+			);
+			console.log(isLiked);
+			setLiked(isLiked);
+		}
+	}, [getLiked, blog.id]);
+	//like blog end
 
 	return (
 		<div className="flex flex-col items-center pt-10 px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
@@ -101,9 +157,19 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 					</div>
 
 					<div className="flex justify-around sm:justify-start items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-						<div>
-							<TooltipForIcons text="Like">
-								<HeartIcon />
+						<div
+							onClick={() => {
+								if (!liked) {
+									likePostHandler(blog.id);
+								} else {
+									unlikePostHandler(blog.id);
+								}
+							}}
+						>
+							<TooltipForIcons text={`${!liked ? "Like" : "Unlike"}`}>
+								<HeartIcon
+									className={liked ? "text-red-500 fill-red-500" : ""}
+								/>
 							</TooltipForIcons>
 						</div>
 

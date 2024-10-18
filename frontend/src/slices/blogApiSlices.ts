@@ -66,7 +66,6 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 					Authorization: token,
 				},
 			}),
-			invalidatesTags: ["Posts"],
 		}),
 		unsaved: builder.mutation({
 			query: (data) => ({
@@ -87,6 +86,30 @@ const blogsApiSlices = apiSlice.injectEndpoints({
 				},
 			}),
 		}),
+		like: builder.mutation({
+			query: (data) => ({
+				url: `${BLOGS_URL}/like`,
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: { Authorization: token },
+			}),
+			invalidatesTags: ["Like"],
+		}),
+		getLiked: builder.query({
+			query: () => ({
+				url: `${BLOGS_URL}/liked`,
+				headers: { Authorization: token },
+			}),
+		}),
+		unlike: builder.mutation({
+			query: (data) => ({
+				url: `${BLOGS_URL}/unlike`,
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: { Authorization: token },
+			}),
+			invalidatesTags: ["Like"],
+		}),
 	}),
 });
 
@@ -101,4 +124,7 @@ export const {
 	useSavedMutation,
 	useUnsavedMutation,
 	useSavedBulkQuery,
+	useLikeMutation,
+	useUnlikeMutation,
+	useGetLikedQuery,
 } = blogsApiSlices;
