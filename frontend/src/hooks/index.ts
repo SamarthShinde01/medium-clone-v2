@@ -8,7 +8,6 @@ export const useSaveBlog = () => {
 
 	const handleSaveBlog = async (blogId: string) => {
 		try {
-			console.log(blogId);
 			const response = await savePost({
 				blogId: blogId,
 			}).unwrap();

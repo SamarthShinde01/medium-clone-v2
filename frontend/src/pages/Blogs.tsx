@@ -24,7 +24,7 @@ export const Blogs = () => {
 						<div className="max-w-2xl w-full">
 							<BlogSkeleton />
 							<BlogSkeleton />
-							<BlogSkeleton />s
+							<BlogSkeleton />
 							<BlogSkeleton />
 						</div>
 					</div>

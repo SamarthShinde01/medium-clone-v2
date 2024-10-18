@@ -101,7 +101,7 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 					</div>
 
 					<div className="flex justify-around sm:justify-start items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
-						<div onClick={() => saveBlogHandler(String(blog.id))}>
+						<div>
 							<TooltipForIcons text="Like">
 								<HeartIcon />
 							</TooltipForIcons>
