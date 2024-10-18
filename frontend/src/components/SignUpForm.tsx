@@ -11,12 +11,12 @@ import { Spinner } from "./Spinner";
 import { toast } from "react-toastify";
 
 export const SignUpForm = () => {
+	const navigate = useNavigate();
 	const [name, setName] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(""); // State to hold error messages
 
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [signupApi, { isLoading }] = useSignupMutation();
 
@@ -37,9 +37,10 @@ export const SignUpForm = () => {
 			dispatch(setCredentials({ ...res }));
 			toast.success("Signed Up Successfully");
 			navigate("/");
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				setError(error.message || "Signup failed. Please try again.");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

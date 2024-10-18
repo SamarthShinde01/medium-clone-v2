@@ -38,7 +38,7 @@ const commentsData = [
 		username: "User1",
 		comment: "Great post! I learned a lot.",
 		date: "2024-10-18",
-		avatar: "/path/to/avatar1.png", // Replace with actual image path
+		avatar: "/path/to/avatar1.png", // Replace with actual image  path
 	},
 	{
 		id: 2,
@@ -82,6 +82,7 @@ export const CommentPost = () => {
 								<form className="flex flex-col gap-4 mt-4">
 									<CKEditor
 										onChange={(event, editor) => {
+											console.log(event);
 											const data = editor.getData();
 											setContent(data);
 										}}

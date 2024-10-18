@@ -2,7 +2,7 @@ import profileImage from "@/assets/images/profile.jpg";
 import comming_soon from "@/assets/images/coming_soon.jpg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserByIdQuery } from "@/slices/userApiSlices";
 import { CommentPost } from "./CommentPost";
 import { useSaveBlog } from "@/hooks";
@@ -30,6 +30,7 @@ interface BlogType {
 }
 
 export const BlogCard = ({ blog }: { blog: BlogType }) => {
+	const navigate = useNavigate();
 	const { handleSaveBlog } = useSaveBlog();
 	const [unsave] = useUnsavedMutation();
 	const [likeBlog] = useLikeMutation();
@@ -54,7 +55,8 @@ export const BlogCard = ({ blog }: { blog: BlogType }) => {
 			refetch();
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 				toast.error(err.message);
 			}
 		}
@@ -81,6 +83,8 @@ export const BlogCard = ({ blog }: { blog: BlogType }) => {
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				console.error(err.message);
+				toast.error("An error occurred while liking the post.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};
@@ -96,6 +100,8 @@ export const BlogCard = ({ blog }: { blog: BlogType }) => {
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				console.error(err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

@@ -8,8 +8,10 @@ import {
 	useProfileQuery,
 	useUpdateProfileMutation,
 } from "@/slices/userApiSlices";
+import { useNavigate } from "react-router-dom";
 
 export const EditProfile = () => {
+	const navigate = useNavigate();
 	const { data: profile } = useProfileQuery({});
 
 	const [name, setName] = useState<string>("");
@@ -53,9 +55,10 @@ export const EditProfile = () => {
 			setBio(res.data.bio);
 			setImage(res.data.image);
 			toast.success("Profile Updated successfully");
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				toast.error(error.message);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

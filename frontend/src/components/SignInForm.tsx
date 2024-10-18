@@ -33,8 +33,8 @@ export const SignInForm = () => {
 			navigate("/");
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err?.message);
-				toast.error(err?.message);
+				toast.error("An error occurred while signing in.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

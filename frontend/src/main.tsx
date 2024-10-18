@@ -21,6 +21,7 @@ import { Profile } from "./pages/Profile.tsx";
 import { Comments } from "./pages/Comments.tsx";
 import { EditBlog } from "./pages/EditBlogPage.tsx";
 import store from "./store.ts";
+import { NotFound } from "./pages/NotFound.tsx";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -36,6 +37,8 @@ const router = createBrowserRouter(
 			<Route path="/blogs/uploaded" element={<Uploaded />} />
 			<Route path="/blogs/saved" element={<Saved />} />
 			<Route path="/blogs/comments" element={<Comments />} />
+
+			<Route path="*" element={<NotFound />} />
 		</Route>
 	)
 );

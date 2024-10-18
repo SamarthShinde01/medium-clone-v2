@@ -77,8 +77,8 @@ export const UpdateBlogComponent = ({ blog }: { blog: BlogType }) => {
 			window.location.reload();
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err);
-				toast.error(err?.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

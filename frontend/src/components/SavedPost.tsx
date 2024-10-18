@@ -6,6 +6,7 @@ import { useSavedBulkQuery, useUnsavedMutation } from "@/slices/blogApiSlices";
 import { useEffect, useState } from "react";
 import { Spinner } from "./Spinner";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface PostTypes {
 	id: string;
@@ -19,6 +20,7 @@ interface PostTypes {
 }
 
 export const SavedPost = () => {
+	const navigate = useNavigate();
 	const { data: savedPost, isLoading, refetch } = useSavedBulkQuery({});
 	const [allPosts, setAllPosts] = useState([]);
 	const [unsave] = useUnsavedMutation();
@@ -45,8 +47,8 @@ export const SavedPost = () => {
 			refetch();
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err.message);
-				toast.error(err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

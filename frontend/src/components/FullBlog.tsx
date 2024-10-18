@@ -16,6 +16,7 @@ import {
 	useUnsavedMutation,
 } from "@/slices/blogApiSlices";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface BlogType {
 	id: string;
@@ -29,6 +30,7 @@ interface BlogType {
 }
 
 export const FullBlog = ({ blog }: { blog: BlogType }) => {
+	const navigate = useNavigate();
 	const { handleSaveBlog } = useSaveBlog();
 	const [unsave] = useUnsavedMutation();
 	const [likeBlog] = useLikeMutation();
@@ -68,8 +70,8 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 			refetch();
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err.message);
-				toast.error("Failed to unsave post: " + err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};
@@ -86,7 +88,8 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 			toast.success("Post Liked");
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};
@@ -101,7 +104,8 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 			toast.success("Post Unliked");
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};

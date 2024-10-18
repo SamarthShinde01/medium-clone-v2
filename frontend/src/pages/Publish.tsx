@@ -56,10 +56,8 @@ export const Publish = () => {
 			navigate(`/blog/${res.id}`);
 		} catch (err: unknown) {
 			if (err instanceof Error) {
-				console.error(err);
-				toast.error(err?.message);
-			} else {
-				console.error(err);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};
@@ -93,14 +91,6 @@ export const Publish = () => {
 							className=" border-slate-200 pt-3 pb-8 mb-5"
 							required
 						/>
-
-						{/* <Textarea
-							placeholder="Write Content..."
-							name="content"
-							onChange={(e) => setContent(e.target.value)}
-							className=" border-slate-200 pt-3 pb-8 mb-5"
-							required
-						/> */}
 
 						<CKEditor
 							onChange={(event, editor) => {

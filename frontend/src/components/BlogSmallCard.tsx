@@ -36,7 +36,8 @@ export const BlogSmallCard = ({ blog }: { blog: BlogType }) => {
 		} catch (err: unknown) {
 			if (err instanceof Error) {
 				console.error(err.message);
-				toast.error(err.message);
+				toast.error("An error occurred.");
+				navigate("/error", { state: { error: err } });
 			}
 		}
 	};
