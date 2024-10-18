@@ -107,12 +107,10 @@ export const BlogCard = ({ blog }: { blog: BlogType }) => {
 	};
 
 	useEffect(() => {
-		if (getLiked) {
-			console.log(getLiked);
+		if (Array.isArray(getLiked)) {
 			const isLiked = getLiked.some(
 				(like: { postId: string }) => like.postId === blog.id
 			);
-			console.log(isLiked);
 			setLiked(isLiked);
 		}
 	}, [getLiked, blog.id]);

@@ -22,23 +22,29 @@ import { Comments } from "./pages/Comments.tsx";
 import { EditBlog } from "./pages/EditBlogPage.tsx";
 import store from "./store.ts";
 import { NotFound } from "./pages/NotFound.tsx";
+import { ErrorPageComponent } from "./pages/Error.tsx";
+import { PrivateRoute } from "./components/PrivateRoute.tsx";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="" element={<App />}>
-			<Route path="/" element={<Blogs />} />
 			<Route path="/signup" element={<Signup />} />
 			<Route path="/signin" element={<Signin />} />
-			<Route path="/settings" element={<Profile />} />
-			<Route path="/blog/:id" element={<Blog />} />
-			<Route path="/blog/edit/:id" element={<EditBlog />} />
-			<Route path="/blogs" element={<Blogs />} />
-			<Route path="/publish" element={<Publish />} />
-			<Route path="/blogs/uploaded" element={<Uploaded />} />
-			<Route path="/blogs/saved" element={<Saved />} />
-			<Route path="/blogs/comments" element={<Comments />} />
+
+			<Route path="" element={<PrivateRoute />}>
+				<Route path="/" element={<Blogs />} />
+				<Route path="/settings" element={<Profile />} />
+				<Route path="/blog/:id" element={<Blog />} />
+				<Route path="/blog/edit/:id" element={<EditBlog />} />
+				<Route path="/blogs" element={<Blogs />} />
+				<Route path="/publish" element={<Publish />} />
+				<Route path="/blogs/uploaded" element={<Uploaded />} />
+				<Route path="/blogs/saved" element={<Saved />} />
+				<Route path="/blogs/comments" element={<Comments />} />
+			</Route>
 
 			<Route path="*" element={<NotFound />} />
+			<Route path="/error" element={<ErrorPageComponent />} />
 		</Route>
 	)
 );

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AlertTriangleIcon } from "lucide-react";
 
 interface ErrorTypes {
@@ -6,16 +6,18 @@ interface ErrorTypes {
 	message?: string;
 }
 
-export const ErrorPageComponent = ({ error }: { error: ErrorTypes }) => {
+export const ErrorPageComponent = () => {
+	const location = useLocation();
+	const error: ErrorTypes = location.state?.error || {};
+
 	return (
 		<div className="min-h-screen flex flex-col items-center justify-center bg-red-50">
 			<h1 className="text-4xl font-bold text-red-800">
-				{error?.statusCode ? error.statusCode : "500"}
+				{error.statusCode || "500"}
 			</h1>
 			<p className="mt-4 text-red-600">
-				{error?.message
-					? error.message
-					: "Oops! Something went wrong on our end. Please try again later."}
+				{error.message ||
+					"Oops! Something went wrong on our end. Please try again later."}
 			</p>
 			<Link
 				to="/"
