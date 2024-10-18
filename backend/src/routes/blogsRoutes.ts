@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import {
 	blogGetSavedPosts,
+	blogLikedPosts,
+	blogLikePost,
 	blogSavedController,
 	blogsClapController,
 	blogsCommentController,
@@ -10,6 +12,7 @@ import {
 	blogsUpdateController,
 	blogsUploadController,
 	blogsUploaded,
+	blogUnlikePost,
 	blogUnsavedController,
 } from "../controllers/BlogControllers";
 import authMiddleware from "../middleware/authMiddleware";
@@ -36,6 +39,7 @@ blogRouter.use(async (c, next) => {
 	await next();
 });
 
+blogRouter.get("/liked", authMiddleware, blogLikedPosts);
 blogRouter.get("/saved/bulk", authMiddleware, blogGetSavedPosts);
 blogRouter.get("/", blogsController);
 blogRouter.post("/", authMiddleware, blogsUploadController);
@@ -47,5 +51,7 @@ blogRouter.post("/clap/:id", authMiddleware, blogsClapController);
 blogRouter.post("/comment/:id", authMiddleware, blogsCommentController);
 blogRouter.post("/saved", authMiddleware, blogSavedController);
 blogRouter.post("/unsaved", authMiddleware, blogUnsavedController);
+blogRouter.post("/like", authMiddleware, blogLikePost);
+blogRouter.post("/unlike", authMiddleware, blogUnlikePost);
 
 export default blogRouter;

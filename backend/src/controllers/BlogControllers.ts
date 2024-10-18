@@ -292,7 +292,6 @@ const blogUnsavedController = async (c: any) => {
 		const bookmark = await prisma.bookmark.findFirst({
 			where: { postId: body.blogId, userId: c.req.user.id },
 		});
-		console.log(bookmark);
 		const postId = await prisma.bookmark.deleteMany({
 			where: { id: bookmark?.id, userId: c.req.user.id },
 		});
@@ -342,6 +341,114 @@ const blogGetSavedPosts = async (c: any) => {
 	}
 };
 
+const blogLikePost = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const body = await c.req.json();
+		if (!body) {
+			c.status(400);
+			return c.json({ message: "No inputs found" });
+		}
+
+		const [likePost, updatedBlog] = await prisma.$transaction([
+			prisma.like.create({
+				data: { userId: c.req.user.id, postId: body.blogId },
+			}),
+			prisma.post.update({
+				where: { id: body.blogId },
+				data: {
+					clap: {
+						increment: 1,
+					},
+				},
+			}),
+		]);
+
+		c.status(200);
+		return c.json({
+			likePost,
+			updatedBlog: {
+				id: updatedBlog.id,
+				clap: updatedBlog.clap,
+			},
+		});
+	} catch (err: any) {
+		console.error(err);
+		c.status(400);
+		return c.json({ message: err.message });
+	}
+};
+
+const blogUnlikePost = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const body = c.req.json();
+
+		if (!body) {
+			c.status(400);
+			return c.json({ message: "No inputs found" });
+		}
+
+		const deleteLike = await prisma.like.findFirst({
+			where: { userId: c.req.user.id, postId: body.blogId },
+		});
+
+		if (!deleteLike) {
+			throw new Error("Like not found");
+		}
+
+		const unlikePost = await prisma.like.delete({
+			where: { id: deleteLike.id },
+		});
+
+		const updatedPost = await prisma.post.update({
+			where: { id: unlikePost.postId },
+			data: { clap: { decrement: 1 } },
+		});
+
+		c.status(200);
+		return c.json({
+			message: "Post unliked successfully",
+			unlikePost,
+			updatedPost: {
+				id: updatedPost.id,
+				clap: updatedPost.clap,
+			},
+		});
+	} catch (err: any) {
+		console.error(err);
+		c.status(400);
+		return c.json({ message: err.message });
+	}
+};
+
+const blogLikedPosts = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const likedPost = await prisma.like.findMany({
+			where: {
+				userId: c.req.user.id,
+			},
+		});
+
+		c.status(200);
+		return c.json(likedPost);
+	} catch (error: any) {
+		console.log(error);
+		c.status(400);
+		return c.json({ message: error });
+	}
+};
+
 export {
 	blogsClapController,
 	blogsCommentController,
@@ -354,4 +461,7 @@ export {
 	blogSavedController,
 	blogUnsavedController,
 	blogGetSavedPosts,
+	blogLikePost,
+	blogUnlikePost,
+	blogLikedPosts,
 };
