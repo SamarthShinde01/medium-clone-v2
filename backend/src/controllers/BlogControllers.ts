@@ -237,28 +237,6 @@ const blogsClapController = async (c: any) => {
 	}
 };
 
-//POST /api/v1/blogs/comment/:id  private
-const blogsCommentController = async (c: any) => {
-	try {
-		const prisma = new PrismaClient({
-			datasourceUrl: c.env.DATABASE_URL,
-		}).$extends(withAccelerate());
-
-		const body = await c.req.json();
-		const id = await c.req.param("id");
-
-		const comment = await prisma.comment.create({
-			data: { userId: c.req.user.id, postId: id, comment: body.comment },
-		});
-		c.status(200);
-		return c.json(comment);
-	} catch (err: any) {
-		console.log(err.message);
-		c.status(400);
-		return c.json({ message: err.message }, 400);
-	}
-};
-
 //POST /api/v1/blogs/saved  private
 const blogSavedController = async (c: any) => {
 	try {
@@ -449,9 +427,93 @@ const blogLikedPosts = async (c: any) => {
 	}
 };
 
+const blogPostComment = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const body = await c.req.parseBody();
+		console.log(body);
+		if (!body) {
+			throw new Error("Inputs not found");
+		}
+
+		const [commentOnPost, updatedPost] = await prisma.$transaction([
+			prisma.comment.create({
+				data: {
+					userId: c.req.user.id,
+					postId: body.blogId,
+					comment: body.comment,
+				},
+			}),
+			prisma.post.update({
+				where: { id: body.blogId },
+				data: {
+					commentCount: {
+						increment: 1,
+					},
+				},
+			}),
+		]);
+
+		if (!commentOnPost || !updatedPost) {
+			c.status(400);
+			return c.json({ message: "Something went wrong" });
+		}
+
+		c.status(200);
+		return c.json({
+			commentOnPost,
+			updatedPost: {
+				id: updatedPost.id,
+				commentCount: updatedPost.commentCount,
+			},
+		});
+	} catch (err: unknown) {
+		if (err instanceof Error) {
+			console.error(err.message);
+		}
+	}
+};
+
+const blogGetComments = async (c: any) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env.DATABASE_URL,
+		}).$extends(withAccelerate());
+
+		const body = await c.req.parseBody();
+		if (!body) {
+			throw new Error("Inputs not found");
+		}
+
+		const CommentedPosts = await prisma.post.findMany({
+			select: {
+				id: true,
+				userId: true,
+				commentCount: true,
+				comments: {
+					select: {
+						id: true,
+						postId: true,
+						comment: true,
+					},
+				},
+			},
+		});
+
+		c.status(200);
+		return c.json(CommentedPosts);
+	} catch (err: unknown) {
+		if (err instanceof Error) {
+			console.error(err.message);
+		}
+	}
+};
+
 export {
 	blogsClapController,
-	blogsCommentController,
 	blogsController,
 	blogsDeleteController,
 	blogsGetController,
@@ -464,4 +526,6 @@ export {
 	blogLikePost,
 	blogUnlikePost,
 	blogLikedPosts,
+	blogPostComment,
+	blogGetComments,
 };
