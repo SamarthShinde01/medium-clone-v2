@@ -167,6 +167,7 @@ export const BlogCard = ({ blog }: { blog: BlogType }) => {
 						<HeartIcon className={liked ? "text-red-500 fill-red-500" : ""} />
 					</TooltipForIcons>
 				</div>
+
 				<CommentPost />
 
 				<div
