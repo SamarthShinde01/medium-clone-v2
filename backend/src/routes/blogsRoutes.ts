@@ -41,7 +41,7 @@ blogRouter.use(async (c, next) => {
 });
 
 blogRouter.get("/comment", blogGetComments);
-blogRouter.get("/liked", blogLikedPosts);
+blogRouter.get("/liked", authMiddleware, blogLikedPosts);
 blogRouter.get("/saved/bulk", authMiddleware, blogGetSavedPosts);
 blogRouter.post("/", authMiddleware, blogsUploadController);
 blogRouter.get("/uploaded", authMiddleware, blogsUploaded);
