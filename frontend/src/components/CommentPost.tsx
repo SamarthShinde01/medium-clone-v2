@@ -54,7 +54,7 @@ export const CommentPost = () => {
 	const [content, setContent] = useState("");
 
 	return (
-		<div className="flex items-center gap-6 my-1">
+		<div className="flex items-center gap-6">
 			<Drawer>
 				<DrawerTrigger>
 					<TooltipProvider>

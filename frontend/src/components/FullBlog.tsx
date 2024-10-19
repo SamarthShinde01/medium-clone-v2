@@ -26,6 +26,7 @@ interface BlogType {
 	image: string;
 	shortContent: string;
 	title: string;
+	commentCount: number;
 }
 
 export const FullBlog = ({ blog }: { blog: BlogType }) => {
@@ -107,7 +108,7 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 	};
 
 	useEffect(() => {
-		if (Array.isArray(getLiked)) {
+		if (getLiked) {
 			const isLiked = getLiked.some(
 				(like: { postId: string }) => like.postId === blog.id
 			);
@@ -163,15 +164,37 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 									unlikePostHandler(blog.id);
 								}
 							}}
+							className="flex gap-1 items-center border border-slate-200 pt-1 px-2 rounded-lg "
 						>
-							<TooltipForIcons text={`${!liked ? "Like" : "Unlike"}`}>
-								<HeartIcon
-									className={liked ? "text-red-500 fill-red-500" : ""}
-								/>
-							</TooltipForIcons>
+							<div className="text-sm text-slate-500 pb-2 font-medium">
+								{blog.clap}
+							</div>
+							<div>
+								<TooltipForIcons text={`${!liked ? "Like" : "Unlike"}`}>
+									<HeartIcon
+										className={liked ? "text-red-500 fill-red-500" : ""}
+									/>
+								</TooltipForIcons>
+							</div>
 						</div>
 
-						<CommentPost />
+						<div
+							onClick={() => {
+								if (!liked) {
+									likePostHandler(blog.id);
+								} else {
+									unlikePostHandler(blog.id);
+								}
+							}}
+							className="flex gap-1 items-center border border-slate-200 pt-1 px-2 rounded-lg "
+						>
+							<div className="text-sm text-slate-500 pb-2 font-medium">
+								{blog.commentCount}
+							</div>
+							<div>
+								<CommentPost />
+							</div>
+						</div>
 
 						<div
 							onClick={() => {
@@ -190,9 +213,9 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 						</div>
 					</div>
 
-					<div className="border-b border-gray-300 my-4 sm:my-6"></div>
+					<div className="border-b border-gray-300 my-2 sm:my-6"></div>
 
-					<div className="w-full mt-4 sm:mt-6">
+					<div className="w-full mt-3 sm:mt-6">
 						<AspectRatio ratio={16 / 9}>
 							<img
 								src={blog?.image || comming_soon}
@@ -201,7 +224,7 @@ export const FullBlog = ({ blog }: { blog: BlogType }) => {
 							/>
 						</AspectRatio>
 					</div>
-					<div className="mt-4 sm:mt-6 text-sm sm:text-base leading-relaxed">
+					<div className="mt-2 md:mt-2 text-base text-md  leading-relaxed">
 						<div dangerouslySetInnerHTML={{ __html: blog?.content }} />
 					</div>
 				</div>
