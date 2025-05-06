@@ -22,3 +22,6 @@ A robust and feature-rich blogging platform that allows users to seamlessly crea
 - **CI/CD**: Docker, GitHub Actions
 
 https://quickest-juniper-f9c.notion.site/Cohort-2-0-FullStack-Open-Source-6b6c2a9f1282499aba4782b88bf7e204
+
+
+https://we.tl/t-OsXLBiwKfn
